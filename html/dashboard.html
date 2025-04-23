@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - FinMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-container">
+        <div class="header-left">
+          <button id="navbar-toggle" class="navbar-toggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="logo">
+            <img src="../assets/images/logo.svg" alt="FinMate Logo">
+            <span class="logo-text">FinMate</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <div class="profile-dropdown">
+            <button id="profile-toggle" class="profile-toggle">
+              <i class="fas fa-user"></i>
+            </button>
+            <div class="profile-menu" id="profile-menu">
+              <div class="profile-menu-header">
+                <div class="profile-menu-name" id="profile-name">User Name</div>
+                <div class="profile-menu-email" id="profile-email">user@example.com</div>
+              </div>
+              <ul class="profile-menu-items">
+                <li class="profile-menu-item">
+                  <a href="dashboard.html" class="profile-menu-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                  </a>
+                </li>
+                <li class="profile-menu-item">
+                  <a href="profile.html" class="profile-menu-link">
+                    <i class="fas fa-user"></i>
+                    Profile
+                  </a>
+                </li>
+                <li class="profile-menu-divider"></li>
+                <li class="profile-menu-item">
+                  <a href="#" id="logout-btn" class="profile-menu-link logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard-content">
+      <!-- Side Navigation -->
+      <nav class="sidenav" id="sidenav">
+        <ul class="sidenav-menu">
+          <li class="sidenav-item">
+            <a href="dashboard.html" class="sidenav-link active">
+              <i class="fas fa-tachometer-alt"></i>
+              Dashboard
+            </a>
+          </li>
+          <li class="sidenav-item">
+            <a href="transactions.html" class="sidenav-link">
+              <i class="fas fa-exchange-alt"></i>
+              Transactions
+            </a>
+          </li>
+          <li class="sidenav-item">
+            <a href="insights.html" class="sidenav-link">
+              <i class="fas fa-chart-bar"></i>
+              Insights
+            </a>
+          </li>
+          <li class="sidenav-item">
+            <a href="budgeting.html" class="sidenav-link">
+              <i class="fas fa-bullseye"></i>
+              Budgeting
+            </a>
+          </li>
+          <li class="sidenav-item">
+            <a href="profile.html" class="sidenav-link">
+              <i class="fas fa-user"></i>
+              Profile
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="dashboard-welcome">
+          <h2 id="welcome-message">Hey, User!</h2>
+          <p>Here's an overview of your finances</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="summary-card-header">
+              <div class="summary-card-title">
+                <i class="fas fa-wallet"></i>
+                <h3>Total Income</h3>
+              </div>
+            </div>
+            <div class="summary-card-amount income-amount" id="total-income">₹0.00</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-card-header">
+              <div class="summary-card-title">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Total Expenses</h3>
+              </div>
+            </div>
+            <div class="summary-card-amount expense-amount" id="total-expenses">₹0.00</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-card-header">
+              <div class="summary-card-title">
+                <i class="fas fa-piggy-bank"></i>
+                <h3>Current Balance</h3>
+              </div>
+            </div>
+            <div class="summary-card-amount balance-amount" id="current-balance">₹0.00</div>
+          </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>Quick Glance</h3>
+            <div class="chart-toggle">
+              <button id="pie-chart-btn" class="chart-toggle-btn active">Pie Chart</button>
+              <button id="bar-chart-btn" class="chart-toggle-btn">Bar Chart</button>
+            </div>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="dashboard-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="recent-transactions">
+          <h3>Recent Transactions</h3>
+          <div id="empty-transactions" class="empty-transactions" style="display: none;">
+            <i class="fas fa-receipt"></i>
+            <h3>No Transactions Yet</h3>
+            <p>Start adding transactions to track your expenses and income.</p>
+          </div>
+          <ul class="transaction-list" id="transaction-list">
+            <!-- Transactions will be populated via JavaScript -->
+          </ul>
+          <a href="transactions.html" class="view-all-link">
+            View All Transactions <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div class="loading-spinner" id="loading-spinner" style="display: none;">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
+
+  <!-- Load Firebase Config -->
+  <script src="../js/firebase-config.js"></script>
+  
+  <!-- Dashboard Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const welcomeMessage = document.getElementById('welcome-message');
+      const totalIncome = document.getElementById('total-income');
+      const totalExpenses = document.getElementById('total-expenses');
+      const currentBalance = document.getElementById('current-balance');
+      const transactionList = document.getElementById('transaction-list');
+      const emptyTransactions = document.getElementById('empty-transactions');
+      const loadingSpinner = document.getElementById('loading-spinner');
+      const navbarToggle = document.getElementById('navbar-toggle');
+      const sideNav = document.getElementById('sidenav');
+      const profileToggle = document.getElementById('profile-toggle');
+      const profileMenu = document.getElementById('profile-menu');
+      const profileName = document.getElementById('profile-name');
+      const profileEmail = document.getElementById('profile-email');
+      const logoutBtn = document.getElementById('logout-btn');
+      const pieChartBtn = document.getElementById('pie-chart-btn');
+      const barChartBtn = document.getElementById('bar-chart-btn');
+      const chartCanvas = document.getElementById('dashboard-chart');
+      
+      // Chart Instance
+      let dashboardChart = null;
+      
+      // Current User
+      let currentUser = null;
+      
+      // Check if user is logged in
+      firebase.auth().onAuthStateChanged(async function(user) {
+        if (user) {
+          // User is logged in
+          currentUser = user;
+          
+          // Update profile information
+          if (profileEmail) profileEmail.textContent = user.email;
+          
+          // Get user name from Firestore
+          try {
+            const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+            
+            if (userDoc.exists) {
+              const userData = userDoc.data();
+              
+              if (welcomeMessage) welcomeMessage.textContent = `Hey, ${userData.name || 'User'}!`;
+              if (profileName) profileName.textContent = userData.name || 'User';
+            }
+          } catch (error) {
+            console.error('Error getting user data:', error);
+          }
+          
+          // Load dashboard data
+          loadDashboardData(user.uid);
+        } else {
+          // User is not logged in, redirect to login page
+          window.location.href = 'login.html';
+        }
+      });
+      
+      // Initialize sidebar toggle
+      if (navbarToggle && sideNav) {
+        navbarToggle.addEventListener('click', function() {
+          sideNav.classList.toggle('active');
+        });
+      }
+      
+      // Initialize profile dropdown toggle
+      if (profileToggle && profileMenu) {
+        profileToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          profileMenu.classList.toggle('active');
+        });
+        
+        // Close profile menu when clicking outside
+        document.addEventListener('click', function(e) {
+          if (profileMenu.classList.contains('active') && !profileMenu.contains(e.target) && e.target !== profileToggle) {
+            profileMenu.classList.remove('active');
+          }
+        });
+      }
+      
+      // Logout functionality
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          firebase.auth().signOut()
+            .then(() => {
+              // Redirect to login page
+              window.location.href = 'login.html';
+            })
+            .catch((error) => {
+              console.error('Error signing out:', error);
+              showToast('Error signing out. Please try again.', 'error');
+            });
+        });
+      }
+      
+      // Chart toggle functionality
+      if (pieChartBtn && barChartBtn) {
+        pieChartBtn.addEventListener('click', function() {
+          pieChartBtn.classList.add('active');
+          barChartBtn.classList.remove('active');
+          
+          if (currentUser) {
+            toggleChart('pie');
+          }
+        });
+        
+        barChartBtn.addEventListener('click', function() {
+          barChartBtn.classList.add('active');
+          pieChartBtn.classList.remove('active');
+          
+          if (currentUser) {
+            toggleChart('bar');
+          }
+        });
+      }
+      
+      // Load dashboard data
+      async function loadDashboardData(userId) {
+        showLoading(true);
+        
+        try {
+          // Get transactions from Firestore
+          const transactionsRef = firebase.firestore().collection('users').doc(userId).collection('transactions');
+          const transactionsSnapshot = await transactionsRef.orderBy('date', 'desc').get();
+          
+          const transactions = [];
+          
+          transactionsSnapshot.forEach(doc => {
+            transactions.push({
+              id: doc.id,
+              ...doc.data()
+            });
+          });
+          
+          // Calculate totals
+          let incomeTotal = 0;
+          let expenseTotal = 0;
+          
+          transactions.forEach(transaction => {
+            if (transaction.type === 'income') {
+              incomeTotal += parseFloat(transaction.amount);
+            } else if (transaction.type === 'expense') {
+              expenseTotal += parseFloat(transaction.amount);
+            }
+          });
+          
+          const balance = incomeTotal - expenseTotal;
+          
+          // Update UI with totals
+          if (totalIncome) totalIncome.textContent = formatCurrency(incomeTotal);
+          if (totalExpenses) totalExpenses.textContent = formatCurrency(expenseTotal);
+          if (currentBalance) currentBalance.textContent = formatCurrency(balance);
+          
+          // Display recent transactions
+          displayRecentTransactions(transactions);
+          
+          // Initialize chart
+          initializeChart('pie', transactions);
+          
+          showLoading(false);
+        } catch (error) {
+          console.error('Error loading dashboard data:', error);
+          showToast('Error loading dashboard data. Please try again.', 'error');
+          showLoading(false);
+        }
+      }
+      
+      // Display recent transactions
+      function displayRecentTransactions(transactions) {
+        if (!transactionList || !emptyTransactions) return;
+        
+        // Clear existing transactions
+        transactionList.innerHTML = '';
+        
+        // Show/hide empty state
+        if (transactions.length === 0) {
+          transactionList.style.display = 'none';
+          emptyTransactions.style.display = 'flex';
+          return;
+        } else {
+          transactionList.style.display = 'block';
+          emptyTransactions.style.display = 'none';
+        }
+        
+        // Get recent transactions (max 5)
+        const recentTransactions = transactions.slice(0, 5);
+        
+        // Create transaction items
+        recentTransactions.forEach(transaction => {
+          const li = document.createElement('li');
+          li.className = 'transaction-item';
+          
+          const formattedDate = formatDate(transaction.date);
+          
+          li.innerHTML = `
+            <div class="transaction-info">
+              <div class="transaction-icon">
+                <i class="${getCategoryIcon(transaction.category)}"></i>
+              </div>
+              <div class="transaction-details">
+                <div class="transaction-title">${transaction.description}</div>
+                <div class="transaction-meta">
+                  <span class="transaction-date"><i class="far fa-calendar"></i> ${formattedDate}</span>
+                  <span class="transaction-category"><i class="fas fa-tag"></i> ${transaction.category}</span>
+                </div>
+              </div>
+            </div>
+            <div class="transaction-amount ${transaction.type}">
+              ${transaction.type === 'income' ? '+' : '-'}${formatCurrency(transaction.amount)}
+            </div>
+          `;
+          
+          transactionList.appendChild(li);
+        });
+      }
+      
+      // Initialize chart
+      function initializeChart(type, transactions) {
+        if (!chartCanvas) return;
+        
+        // Destroy existing chart if any
+        if (dashboardChart) {
+          dashboardChart.destroy();
+        }
+        
+        // If no transactions, don't create chart
+        if (transactions.length === 0) return;
+        
+        if (type === 'pie') {
+          // Create pie chart for expense categories
+          const expensesByCategory = {};
+          
+          // Filter expense transactions
+          const expenses = transactions.filter(transaction => transaction.type === 'expense');
+          
+          if (expenses.length === 0) {
+            // No expense data yet
+            return;
+          }
+          
+          // Group expenses by category
+          expenses.forEach(expense => {
+            if (!expensesByCategory[expense.category]) {
+              expensesByCategory[expense.category] = 0;
+            }
+            
+            expensesByCategory[expense.category] += parseFloat(expense.amount);
+          });
+          
+          // Prepare data for chart
+          const categories = Object.keys(expensesByCategory);
+          const amounts = Object.values(expensesByCategory);
+          const colors = generateColors(categories.length);
+          
+          // Create chart
+          dashboardChart = new Chart(chartCanvas, {
+            type: 'pie',
+            data: {
+              labels: categories,
+              datasets: [{
+                data: amounts,
+                backgroundColor: colors,
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'right'
+                },
+                title: {
+                  display: true,
+                  text: 'Expenses by Category'
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      const label = context.label || '';
+                      const value = context.raw || 0;
+                      const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                      const percentage = Math.round((value / total) * 100);
+                      
+                      return `${label}: ${formatCurrency(value)} (${percentage}%)`;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        } else if (type === 'bar') {
+          // Create bar chart for monthly income vs expenses
+          const monthlyData = {};
+          
+          // Group transactions by month
+          transactions.forEach(transaction => {
+            const date = new Date(transaction.date);
+            const month = date.toLocaleString('default', { month: 'short' });
+            
+            if (!monthlyData[month]) {
+              monthlyData[month] = {
+                income: 0,
+                expense: 0
+              };
+            }
+            
+            if (transaction.type === 'income') {
+              monthlyData[month].income += parseFloat(transaction.amount);
+            } else if (transaction.type === 'expense') {
+              monthlyData[month].expense += parseFloat(transaction.amount);
+            }
+          });
+          
+          // Prepare data for chart
+          const months = Object.keys(monthlyData);
+          const incomeData = months.map(month => monthlyData[month].income);
+          const expenseData = months.map(month => monthlyData[month].expense);
+          
+          // Create chart
+          dashboardChart = new Chart(chartCanvas, {
+            type: 'bar',
+            data: {
+              labels: months,
+              datasets: [
+                {
+                  label: 'Income',
+                  data: incomeData,
+                  backgroundColor: '#4CAF50',
+                  borderWidth: 1
+                },
+                {
+                  label: 'Expense',
+                  data: expenseData,
+                  backgroundColor: '#F44336',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: {
+                  stacked: false
+                },
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function(value) {
+                      return formatCurrency(value);
+                    }
+                  }
+                }
+              },
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Monthly Income vs Expense'
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function(context) {
+                      const label = context.dataset.label || '';
+                      const value = context.raw || 0;
+                      
+                      return `${label}: ${formatCurrency(value)}`;
+                    }
+                  }
+                }
+              }
+            }
+          });
+        }
+      }
+      
+      // Toggle chart type
+      function toggleChart(type) {
+        if (!currentUser) return;
+        
+        firebase.firestore().collection('users').doc(currentUser.uid).collection('transactions').orderBy('date', 'desc').get()
+          .then(snapshot => {
+            const transactions = [];
+            
+            snapshot.forEach(doc => {
+              transactions.push({
+                id: doc.id,
+                ...doc.data()
+              });
+            });
+            
+            initializeChart(type, transactions);
+          })
+          .catch(error => {
+            console.error('Error toggling chart:', error);
+            showToast('Error updating chart. Please try again.', 'error');
+          });
+      }
+      
+      // Format currency function
+      function formatCurrency(amount) {
+        return new Intl.NumberFormat('en-IN', {
+          style: 'currency',
+          currency: 'INR',
+          minimumFractionDigits: 2
+        }).format(amount);
+      }
+      
+      // Format date function
+      function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-IN', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      }
+      
+      // Get category icon function
+      function getCategoryIcon(category) {
+        switch (category.toLowerCase()) {
+          case 'food':
+            return 'fas fa-utensils';
+          case 'shopping':
+            return 'fas fa-shopping-bag';
+          case 'transportation':
+            return 'fas fa-car';
+          case 'entertainment':
+            return 'fas fa-film';
+          case 'utilities':
+            return 'fas fa-lightbulb';
+          case 'housing':
+            return 'fas fa-home';
+          case 'healthcare':
+            return 'fas fa-medkit';
+          case 'education':
+            return 'fas fa-graduation-cap';
+          case 'travel':
+            return 'fas fa-plane';
+          case 'personal':
+            return 'fas fa-user';
+          case 'salary':
+            return 'fas fa-money-check-alt';
+          case 'investment':
+            return 'fas fa-chart-line';
+          case 'gift':
+            return 'fas fa-gift';
+          case 'other':
+            return 'fas fa-box';
+          default:
+            return 'fas fa-receipt';
+        }
+      }
+      
+      // Generate colors for chart
+      function generateColors(count) {
+        const baseColors = [
+          '#00BCD4', // Primary
+          '#4CAF50', // Success
+          '#F44336', // Danger
+          '#FFC107', // Warning
+          '#9C27B0', // Purple
+          '#FF9800', // Orange
+          '#3F51B5', // Indigo
+          '#2196F3', // Blue
+          '#009688', // Teal
+          '#E91E63', // Pink
+          '#673AB7', // Deep Purple
+          '#CDDC39', // Lime
+          '#795548', // Brown
+          '#607D8B'  // Blue Grey
+        ];
+        
+        if (count <= baseColors.length) {
+          return baseColors.slice(0, count);
+        }
+        
+        // If we need more colors than in our base set, generate them
+        const colors = [...baseColors];
+        
+        for (let i = baseColors.length; i < count; i++) {
+          const r = Math.floor(Math.random() * 255);
+          const g = Math.floor(Math.random() * 255);
+          const b = Math.floor(Math.random() * 255);
+          
+          colors.push(`rgb(${r}, ${g}, ${b})`);
+        }
+        
+        return colors;
+      }
+      
+      // Show/hide loading spinner
+      function showLoading(show) {
+        if (loadingSpinner) {
+          loadingSpinner.style.display = show ? 'flex' : 'none';
+        }
+      }
+      
+      // Toast notification function
+      function showToast(message, type = 'default') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const toastIcon = document.createElement('span');
+        toastIcon.className = 'toast-icon';
+        
+        switch (type) {
+          case 'success':
+            toastIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+            break;
+          case 'error':
+            toastIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+            break;
+          case 'warning':
+            toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            break;
+          default:
+            toastIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
+        }
+        
+        const toastMessage = document.createElement('span');
+        toastMessage.className = 'toast-message';
+        toastMessage.textContent = message;
+        
+        toast.appendChild(toastIcon);
+        toast.appendChild(toastMessage);
+        
+        const toastContainer = document.querySelector('.toast-container');
+        if (toastContainer) {
+          toastContainer.appendChild(toast);
+          
+          // Auto remove after 3 seconds
+          setTimeout(() => {
+            toast.remove();
+          }, 3000);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

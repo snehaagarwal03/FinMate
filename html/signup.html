@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up for FinMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/auth.css">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="../assets/images/logo.svg" alt="FinMate Logo">
+        <span class="logo-text">FinMate</span>
+      </div>
+      <div class="header-auth">
+        <a href="login.html" class="btn btn-secondary">Login</a>
+        <a href="signup.html" class="btn btn-primary">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <div class="auth-form-container">
+      <div class="auth-form">
+        <h2>Create Your Account</h2>
+        <div id="signup-error" class="auth-error"></div>
+        
+        <form id="signup-form">
+          <div class="auth-form-group">
+            <label for="signup-name">Full Name</label>
+            <input type="text" id="signup-name" name="name" required>
+          </div>
+          <div class="auth-form-group">
+            <label for="signup-email">Email Address</label>
+            <input type="email" id="signup-email" name="email" required>
+          </div>
+          <div class="auth-form-group">
+            <label for="signup-password">Password</label>
+            <input type="password" id="signup-password" name="password" required minlength="6">
+          </div>
+          <div class="auth-form-group">
+            <label for="signup-confirm-password">Confirm Password</label>
+            <input type="password" id="signup-confirm-password" name="confirm-password" required minlength="6">
+          </div>
+          <button type="submit" class="auth-btn">Sign Up</button>
+        </form>
+        
+        <div class="auth-divider">
+          <span>or</span>
+        </div>
+        
+        <button id="google-signup" class="social-auth-btn google">
+          <i class="fab fa-google"></i>
+          Sign up with Google
+        </button>
+        
+        <div class="auth-footer">
+          Already have an account? <a href="login.html">Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>FinMate</h3>
+          <p>Your smart financial companion for tracking expenses and achieving financial freedom.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../index.html#features">Features</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="signup.html">Sign Up</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Resources</h3>
+          <ul class="footer-links">
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Legal</h3>
+          <ul class="footer-links">
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#">Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 FinMate. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
+
+  <!-- Load Firebase Config -->
+  <script src="../js/firebase-config.js"></script>
+  
+  <!-- Auth Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const signupForm = document.getElementById('signup-form');
+      const signupError = document.getElementById('signup-error');
+      const googleSignupBtn = document.getElementById('google-signup');
+      
+      // Check if user is already logged in
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          // User is signed in, redirect to dashboard
+          window.location.href = 'dashboard.html';
+        }
+      });
+      
+      // Signup form submission
+      if (signupForm) {
+        signupForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const name = document.getElementById('signup-name').value;
+          const email = document.getElementById('signup-email').value;
+          const password = document.getElementById('signup-password').value;
+          const confirmPassword = document.getElementById('signup-confirm-password').value;
+          
+          // Validate password match
+          if (password !== confirmPassword) {
+            if (signupError) {
+              signupError.textContent = 'Passwords do not match.';
+              signupError.classList.add('active');
+            }
+            return;
+          }
+          
+          // Show loading (you can add a loading spinner here)
+          
+          // Create user with email and password
+          firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+              // Add user info to Firestore
+              return firebase.firestore().collection('users').doc(userCredential.user.uid).set({
+                name: name,
+                email: email,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+              })
+              .then(() => {
+                // Create meta document for the user
+                return firebase.firestore().collection('users').doc(userCredential.user.uid)
+                  .collection('meta').doc('profile').set({
+                    income: {
+                      amount: 0,
+                      type: 'monthly',
+                      currency: 'INR'
+                    },
+                    budgets: {}
+                  });
+              });
+            })
+            .then(() => {
+              // Show success message
+              showToast('Account created successfully!', 'success');
+              
+              // Redirect to dashboard
+              setTimeout(() => {
+                window.location.href = 'dashboard.html';
+              }, 1000);
+            })
+            .catch((error) => {
+              // Handle errors
+              if (signupError) {
+                signupError.textContent = getAuthErrorMessage(error.code);
+                signupError.classList.add('active');
+              }
+              // Hide loading
+            });
+        });
+      }
+      
+      // Google signup
+      if (googleSignupBtn) {
+        googleSignupBtn.addEventListener('click', function() {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          
+          // Show loading
+          
+          firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+              // Check if it's a new user
+              const isNewUser = result.additionalUserInfo.isNewUser;
+              
+              if (isNewUser) {
+                // Create user document in Firestore
+                return firebase.firestore().collection('users').doc(result.user.uid).set({
+                  name: result.user.displayName || '',
+                  email: result.user.email,
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                  // Create meta document for the user
+                  return firebase.firestore().collection('users').doc(result.user.uid)
+                    .collection('meta').doc('profile').set({
+                      income: {
+                        amount: 0,
+                        type: 'monthly',
+                        currency: 'INR'
+                      },
+                      budgets: {}
+                    });
+                })
+                .then(() => {
+                  // Redirect to dashboard
+                  window.location.href = 'dashboard.html';
+                });
+              } else {
+                // Existing user, redirect to dashboard
+                window.location.href = 'dashboard.html';
+              }
+            })
+            .catch((error) => {
+              // Handle errors
+              if (signupError) {
+                signupError.textContent = getAuthErrorMessage(error.code);
+                signupError.classList.add('active');
+              }
+              // Hide loading
+            });
+        });
+      }
+      
+      // Helper function to get auth error messages
+      function getAuthErrorMessage(errorCode) {
+        switch (errorCode) {
+          case 'auth/user-not-found':
+            return 'No user found with this email address.';
+          case 'auth/wrong-password':
+            return 'Invalid password. Please try again.';
+          case 'auth/invalid-email':
+            return 'Invalid email address format.';
+          case 'auth/user-disabled':
+            return 'This account has been disabled.';
+          case 'auth/email-already-in-use':
+            return 'This email is already in use by another account.';
+          case 'auth/operation-not-allowed':
+            return 'This operation is not allowed.';
+          case 'auth/weak-password':
+            return 'Password is too weak. Use at least 6 characters.';
+          case 'auth/popup-closed-by-user':
+            return 'Sign-in popup was closed before completing the sign in.';
+          case 'auth/cancelled-popup-request':
+            return 'Sign-in popup was cancelled. Please try again.';
+          case 'auth/popup-blocked':
+            return 'Sign-in popup was blocked by the browser. Please allow popups.';
+          default:
+            return 'An error occurred. Please try again.';
+        }
+      }
+      
+      // Toast notification function
+      function showToast(message, type = 'default') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const toastIcon = document.createElement('span');
+        toastIcon.className = 'toast-icon';
+        
+        switch (type) {
+          case 'success':
+            toastIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+            break;
+          case 'error':
+            toastIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+            break;
+          case 'warning':
+            toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            break;
+          default:
+            toastIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
+        }
+        
+        const toastMessage = document.createElement('span');
+        toastMessage.className = 'toast-message';
+        toastMessage.textContent = message;
+        
+        toast.appendChild(toastIcon);
+        toast.appendChild(toastMessage);
+        
+        const toastContainer = document.querySelector('.toast-container');
+        if (toastContainer) {
+          toastContainer.appendChild(toast);
+          
+          // Auto remove after 3 seconds
+          setTimeout(() => {
+            toast.remove();
+          }, 3000);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

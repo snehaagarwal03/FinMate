@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login to FinMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/auth.css">
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="../assets/images/logo.svg" alt="FinMate Logo">
+        <span class="logo-text">FinMate</span>
+      </div>
+      <div class="header-auth">
+        <a href="login.html" class="btn btn-secondary">Login</a>
+        <a href="signup.html" class="btn btn-primary">Sign Up</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <div class="auth-form-container">
+      <div class="auth-form">
+        <h2>Login to Your Account</h2>
+        <div id="login-error" class="auth-error"></div>
+        
+        <form id="login-form">
+          <div class="auth-form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" name="email" required>
+          </div>
+          <div class="auth-form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" required>
+          </div>
+          <div class="forgot-password">
+            <a href="#" id="forgot-password-link">Forgot your password?</a>
+          </div>
+          <button type="submit" class="auth-btn">Login</button>
+        </form>
+        
+        <div class="auth-divider">
+          <span>or</span>
+        </div>
+        
+        <button id="google-login" class="social-auth-btn google">
+          <i class="fab fa-google"></i>
+          Continue with Google
+        </button>
+        
+        <div class="auth-footer">
+          Don't have an account? <a href="signup.html">Sign up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reset Password Modal -->
+  <div id="reset-password-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Reset Your Password</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="reset-error" class="auth-error"></div>
+        <form id="reset-form">
+          <div class="auth-form-group">
+            <label for="reset-email">Email Address</label>
+            <input type="email" id="reset-email" name="email" required>
+          </div>
+          <button type="submit" class="auth-btn">Send Reset Link</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>FinMate</h3>
+          <p>Your smart financial companion for tracking expenses and achieving financial freedom.</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../index.html#features">Features</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="signup.html">Sign Up</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Resources</h3>
+          <ul class="footer-links">
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h3>Legal</h3>
+          <ul class="footer-links">
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="#">Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2023 FinMate. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
+
+  <!-- Load Firebase Config -->
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/utils.js"></script>
+  
+  <!-- Auth Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // DOM Elements
+      const loginForm = document.getElementById('login-form');
+      const loginError = document.getElementById('login-error');
+      const googleLoginBtn = document.getElementById('google-login');
+      const forgotPasswordLink = document.getElementById('forgot-password-link');
+      const resetPasswordModal = document.getElementById('reset-password-modal');
+      const resetForm = document.getElementById('reset-form');
+      const resetError = document.getElementById('reset-error');
+      const modalClose = document.querySelector('.modal-close');
+      
+      // Check if user is already logged in
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          // User is signed in, redirect to dashboard
+          window.location.href = 'dashboard.html';
+        }
+      });
+      
+      // Login form submission
+      if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const email = document.getElementById('login-email').value;
+          const password = document.getElementById('login-password').value;
+          
+          // Show loading
+          showLoading(true);
+          
+          // Sign in with email and password
+          firebase.auth().signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+              // Redirect to dashboard
+              window.location.href = 'dashboard.html';
+            })
+            .catch((error) => {
+              // Handle errors
+              if (loginError) {
+                loginError.textContent = getAuthErrorMessage(error.code);
+                loginError.classList.add('active');
+              }
+              // Hide loading
+              showLoading(false);
+            });
+        });
+      }
+      
+      // Google login
+      if (googleLoginBtn) {
+        googleLoginBtn.addEventListener('click', function() {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          
+          // Show loading
+          showLoading(true);
+          
+          firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+              // Check if it's a new user
+              const isNewUser = result.additionalUserInfo.isNewUser;
+              
+              if (isNewUser) {
+                // Create user document in Firestore
+                return firebase.firestore().collection('users').doc(result.user.uid).set({
+                  name: result.user.displayName || '',
+                  email: result.user.email,
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                })
+                .then(() => {
+                  // Create meta document for the user
+                  return firebase.firestore().collection('users').doc(result.user.uid)
+                    .collection('meta').doc('profile').set({
+                      income: {
+                        amount: 0,
+                        type: 'monthly',
+                        currency: 'INR'
+                      },
+                      budgets: {}
+                    });
+                })
+                .then(() => {
+                  // Redirect to dashboard
+                  window.location.href = 'dashboard.html';
+                });
+              } else {
+                // Existing user, redirect to dashboard
+                window.location.href = 'dashboard.html';
+              }
+            })
+            .catch((error) => {
+              // Handle errors
+              if (loginError) {
+                loginError.textContent = getAuthErrorMessage(error.code);
+                loginError.classList.add('active');
+              }
+              // Hide loading
+              showLoading(false);
+            });
+        });
+      }
+      
+      // Forgot password link
+      if (forgotPasswordLink) {
+        forgotPasswordLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          if (resetPasswordModal) {
+            resetPasswordModal.classList.add('active');
+          }
+        });
+      }
+      
+      // Reset password form
+      if (resetForm) {
+        resetForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const email = document.getElementById('reset-email').value;
+          
+          // Show loading
+          showLoading(true);
+          
+          firebase.auth().sendPasswordResetEmail(email)
+            .then(() => {
+              // Show success message
+              showToast('Password reset email sent. Check your inbox.', 'success');
+              
+              // Close modal
+              if (resetPasswordModal) {
+                resetPasswordModal.classList.remove('active');
+              }
+              
+              // Clear form
+              resetForm.reset();
+              
+              // Hide loading
+              showLoading(false);
+            })
+            .catch((error) => {
+              // Handle errors
+              if (resetError) {
+                resetError.textContent = getAuthErrorMessage(error.code);
+                resetError.classList.add('active');
+              }
+              // Hide loading
+              showLoading(false);
+            });
+        });
+      }
+      
+      // Close modal
+      if (modalClose) {
+        modalClose.addEventListener('click', function() {
+          if (resetPasswordModal) {
+            resetPasswordModal.classList.remove('active');
+          }
+        });
+      }
+      
+      // Close modal when clicking outside
+      window.addEventListener('click', function(e) {
+        if (e.target === resetPasswordModal) {
+          resetPasswordModal.classList.remove('active');
+        }
+      });
+      
+      // Helper function to get auth error messages
+      function getAuthErrorMessage(errorCode) {
+        switch (errorCode) {
+          case 'auth/user-not-found':
+            return 'No user found with this email address.';
+          case 'auth/wrong-password':
+            return 'Invalid password. Please try again.';
+          case 'auth/invalid-email':
+            return 'Invalid email address format.';
+          case 'auth/user-disabled':
+            return 'This account has been disabled.';
+          case 'auth/email-already-in-use':
+            return 'This email is already in use by another account.';
+          case 'auth/operation-not-allowed':
+            return 'This operation is not allowed.';
+          case 'auth/weak-password':
+            return 'Password is too weak. Use at least 6 characters.';
+          case 'auth/popup-closed-by-user':
+            return 'Sign-in popup was closed before completing the sign in.';
+          case 'auth/cancelled-popup-request':
+            return 'Sign-in popup was cancelled. Please try again.';
+          case 'auth/popup-blocked':
+            return 'Sign-in popup was blocked by the browser. Please allow popups.';
+          default:
+            return 'An error occurred. Please try again.';
+        }
+      }
+      
+      // Add loading spinner to the page
+      const loadingSpinner = document.createElement('div');
+      loadingSpinner.className = 'loading-spinner';
+      loadingSpinner.id = 'loading-spinner';
+      loadingSpinner.style.display = 'none';
+      
+      const spinner = document.createElement('div');
+      spinner.className = 'spinner';
+      
+      loadingSpinner.appendChild(spinner);
+      document.body.appendChild(loadingSpinner);
+    });
+  </script>
+</body>
+</html>
