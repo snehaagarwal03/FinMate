@@ -1,0 +1,180 @@
+{% extends 'layout.html' %}
+
+{% block title %}Insights - FinMate{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/insights.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="insights-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="header-left">
+        <button id="navbar-toggle" class="navbar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo">
+          <img src="{{ url_for('static', filename='assets/logo.svg') }}" alt="FinMate Logo">
+          <span class="logo-text">FinMate</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="profile-dropdown">
+          <button id="profile-toggle" class="profile-toggle">
+            <i class="fas fa-user"></i>
+          </button>
+          <div class="profile-menu">
+            <div class="profile-menu-header">
+              <div class="profile-menu-name">User Name</div>
+              <div class="profile-menu-email">user@example.com</div>
+            </div>
+            <ul class="profile-menu-items">
+              <li class="profile-menu-item">
+                <a href="/dashboard" class="profile-menu-link">
+                  <i class="fas fa-tachometer-alt"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li class="profile-menu-item">
+                <a href="/profile" class="profile-menu-link">
+                  <i class="fas fa-user"></i>
+                  Profile
+                </a>
+              </li>
+              <li class="profile-menu-divider"></li>
+              <li class="profile-menu-item">
+                <a href="#" class="profile-menu-link logout-btn">
+                  <i class="fas fa-sign-out-alt"></i>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="insights-content">
+    <!-- Side Navigation -->
+    <nav class="sidenav">
+      <ul class="sidenav-menu">
+        <li class="sidenav-item">
+          <a href="/dashboard" class="sidenav-link">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="sidenav-item">
+          <a href="/transactions" class="sidenav-link">
+            <i class="fas fa-exchange-alt"></i>
+            Transactions
+          </a>
+        </li>
+        <li class="sidenav-item">
+          <a href="/insights" class="sidenav-link">
+            <i class="fas fa-chart-bar"></i>
+            Insights
+          </a>
+        </li>
+        <li class="sidenav-item">
+          <a href="/budgeting" class="sidenav-link">
+            <i class="fas fa-bullseye"></i>
+            Budgeting
+          </a>
+        </li>
+        <li class="sidenav-item">
+          <a href="/profile" class="sidenav-link">
+            <i class="fas fa-user"></i>
+            Profile
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="insights-main">
+      <div class="insights-header">
+        <h2>Financial Insights</h2>
+      </div>
+
+      <!-- Filters Section -->
+      <div class="insights-filters">
+        <div class="filter-group">
+          <label for="date-from-filter">From Date</label>
+          <input type="date" id="date-from-filter">
+        </div>
+        <div class="filter-group">
+          <label for="date-to-filter">To Date</label>
+          <input type="date" id="date-to-filter">
+        </div>
+        <div class="filter-group">
+          <label for="type-filter">Type</label>
+          <select id="type-filter">
+            <option value="">All</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+        <div class="filter-buttons">
+          <button id="apply-filters-btn" class="apply-filters-btn">Apply Filters</button>
+          <button id="reset-filters-btn" class="reset-filters-btn">Reset</button>
+        </div>
+      </div>
+
+      <!-- Empty Insights State -->
+      <div class="empty-insights">
+        <i class="fas fa-chart-pie"></i>
+        <h3>No Data Available</h3>
+        <p>Add transactions to generate insights and visualizations</p>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <!-- Pie Chart - Expenses by Category -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Expenses by Category</h3>
+            <p class="chart-description">Distribution of your expenses across different categories</p>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="pie-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Bar Chart - Income vs Expense -->
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3 class="chart-title">Income vs Expense</h3>
+            <p class="chart-description">Monthly comparison of your income and expenses</p>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="bar-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Line Chart - Balance Trend -->
+        <div class="chart-container full-width">
+          <div class="chart-header">
+            <h3 class="chart-title">Balance Trend</h3>
+            <p class="chart-description">Your balance trend over time showing monthly and cumulative changes</p>
+          </div>
+          <div class="chart-canvas-container">
+            <canvas id="line-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="{{ url_for('static', filename='js/firebase-config.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/utils.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/insights.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'layout.html' %}
+
+{% block title %}Dashboard - FinMate{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="header-left">
+        <button id="navbar-toggle" class="navbar-toggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="logo">
+          <img src="{{ url_for('static', filename='assets/logo.svg') }}" alt="FinMate Logo">
+          <span class="logo-text">FinMate</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="profile-dropdown">
+          <button id="profile-toggle" class="profile-toggle">
+            <i class="fas fa-user"></i>
+          </button>
+          <div class="profile-menu">
+            <div class="profile-menu-header">
+              <div class="profile-menu-name">User Name</div>
+              <div class="profile-menu-email">user@example.com</div>
+            </div>
+            <ul class="profile-menu-items">
+              <li class="profile-menu-item">
+                <a href="/dashboard" class="profile-menu-link">
+                  <i class="fas fa-tachometer-alt"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li class="profile-menu-item">
+                <a href="/profile" class="profile-menu-link">
+                  <i class="fas fa-user"></i>
+                  Profile
+                </a>
+              </li>
+              <li class="profile-menu-divider"></li>
+              <li class="profile-menu-item">
+                <a href="#" class="profile-menu-link logout-btn">
+                  <i class="fas fa-sign-out-alt"></i>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-content">
+    <!-- Side Navigation -->
+    <nav class="sidenav">
+      <ul class="sidenav-menu">
+        <li class="sidenav-item">
+          <a href="/dashboard" class="sidenav-link">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="sidenav-item">
+          <a href="/transactions" class="sidenav-link">
+            <i class="fas fa-exchange-alt"></i>
+            Transactions
+          </a>
+        </li>
+        <li class="sidenav-item">
+          <a href="/insights" class="sidenav-link">
+            <i class="fas fa-chart-bar"></i>
+            Insights
+          </a>
+        </li>
+        <li class="sidenav-item">
+          <a href="/budgeting" class="sidenav-link">
+            <i class="fas fa-bullseye"></i>
+            Budgeting
+          </a>
+        </li>
+        <li class="sidenav-item">
+          <a href="/profile" class="sidenav-link">
+            <i class="fas fa-user"></i>
+            Profile
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="dashboard-welcome">
+        <h2 id="welcome-message">Hey, User!</h2>
+        <p>Here's an overview of your finances</p>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="summary-cards">
+        <div class="summary-card">
+          <div class="summary-card-header">
+            <div class="summary-card-title">
+              <i class="fas fa-wallet"></i>
+              <h3>Total Income</h3>
+            </div>
+          </div>
+          <div class="summary-card-amount income-amount" id="total-income">₹0.00</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-card-header">
+            <div class="summary-card-title">
+              <i class="fas fa-shopping-cart"></i>
+              <h3>Total Expenses</h3>
+            </div>
+          </div>
+          <div class="summary-card-amount expense-amount" id="total-expenses">₹0.00</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-card-header">
+            <div class="summary-card-title">
+              <i class="fas fa-piggy-bank"></i>
+              <h3>Current Balance</h3>
+            </div>
+          </div>
+          <div class="summary-card-amount balance-amount" id="current-balance">₹0.00</div>
+        </div>
+      </div>
+
+      <!-- Chart Section -->
+      <div class="chart-container">
+        <div class="chart-header">
+          <h3>Quick Glance</h3>
+          <div class="chart-toggle">
+            <button id="pie-chart-btn" class="chart-toggle-btn active">Pie Chart</button>
+            <button id="bar-chart-btn" class="chart-toggle-btn">Bar Chart</button>
+          </div>
+        </div>
+        <div class="chart-canvas-container">
+          <canvas id="dashboard-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div class="recent-transactions">
+        <h3>Recent Transactions</h3>
+        <ul class="transaction-list" id="transaction-list">
+          <!-- Transactions will be inserted here via JavaScript -->
+        </ul>
+        <a href="/transactions" class="view-all-link">View All Transactions</a>
+      </div>
+    </main>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="{{ url_for('static', filename='js/firebase-config.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/utils.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

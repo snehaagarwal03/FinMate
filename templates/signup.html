@@ -1,0 +1,118 @@
+{% extends 'layout.html' %}
+
+{% block title %}Sign Up for FinMate{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<header class="header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='assets/logo.svg') }}" alt="FinMate Logo">
+      <span class="logo-text">FinMate</span>
+    </div>
+    <div class="header-auth">
+      <a href="/login" class="btn btn-secondary">Login</a>
+      <a href="/signup" class="btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</header>
+
+<div class="auth-container">
+  <div class="auth-form-container">
+    <div class="auth-form">
+      <h2>Create Your Account</h2>
+      <div class="auth-error"></div>
+      
+      <form id="signup-form">
+        <div class="auth-form-group">
+          <label for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" name="name" required>
+        </div>
+        <div class="auth-form-group">
+          <label for="signup-email">Email Address</label>
+          <input type="email" id="signup-email" name="email" required>
+        </div>
+        <div class="auth-form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" name="password" required minlength="6">
+        </div>
+        <div class="auth-form-group">
+          <label for="signup-confirm-password">Confirm Password</label>
+          <input type="password" id="signup-confirm-password" name="confirm-password" required minlength="6">
+        </div>
+        <button type="submit" class="auth-btn">Sign Up</button>
+      </form>
+      
+      <div class="auth-divider">
+        <span>or</span>
+      </div>
+      
+      <button class="social-auth-btn google">
+        <i class="fab fa-google"></i>
+        Sign up with Google
+      </button>
+      
+      <div class="auth-footer">
+        Already have an account? <a href="/login">Login</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-column">
+        <h3>FinMate</h3>
+        <p>Your smart financial companion for tracking expenses and achieving financial freedom.</p>
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul class="footer-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Sign Up</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Resources</h3>
+        <ul class="footer-links">
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>Legal</h3>
+        <ul class="footer-links">
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">Disclaimer</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2023 FinMate. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/firebase-config.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}
