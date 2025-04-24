@@ -106,28 +106,74 @@ function initializeProfileDropdown() {
         });
     });
   }
-  
-  // Update profile information
+}
+
+// Fetch and display user's name in dashboard greeting (support both IDs for legacy)
+function setDashboardGreeting() {
+  const greetingElem = document.getElementById('dashboard-greeting') || document.getElementById('welcome-message');
+  if (greetingElem) {
+    firebase.auth().onAuthStateChanged(async function(user) {
+      if (user) {
+        try {
+          const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+          let name = 'User';
+          if (userDoc.exists) {
+            const userData = userDoc.data();
+            if (userData.name) name = userData.name;
+          }
+          greetingElem.textContent = `Hey, ${name}!`;
+        } catch (error) {
+          greetingElem.textContent = 'Hey, User!';
+        }
+      }
+    });
+  }
+}
+
+// Dropdown: always fetch name from Firestore
+firebase.auth().onAuthStateChanged(async function(user) {
+  if (user) {
+    const profileName = document.getElementById('profile-name');
+    const profileEmail = document.getElementById('profile-email');
+    if (profileEmail) profileEmail.textContent = user.email;
+    try {
+      const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        if (profileName) profileName.textContent = userData.name || 'User';
+      }
+    } catch (error) {
+      if (profileName) profileName.textContent = 'User';
+    }
+  }
+});
+
+// Prefill profile form name input if present (for profile.html)
+function prefillProfileName() {
   firebase.auth().onAuthStateChanged(async function(user) {
     if (user) {
-      const profileName = document.getElementById('profile-name');
-      const profileEmail = document.getElementById('profile-email');
-      
-      if (profileEmail) profileEmail.textContent = user.email;
-      
       try {
         const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-        
         if (userDoc.exists) {
           const userData = userDoc.data();
-          
-          if (profileName) profileName.textContent = userData.name || 'User';
+          const nameInput = document.getElementById('profile-name-input');
+          if (nameInput) nameInput.value = userData.name || '';
         }
       } catch (error) {
-        console.error('Error getting user data:', error);
+        // silent fail
       }
     }
   });
+}
+
+// Call this function on profile.html after DOMContentLoaded
+if (window.location.pathname.endsWith('profile.html')) {
+  document.addEventListener('DOMContentLoaded', prefillProfileName);
+}
+
+// Call on dashboard.html after DOMContentLoaded
+if (window.location.pathname.endsWith('dashboard.html')) {
+  document.addEventListener('DOMContentLoaded', setDashboardGreeting);
 }
 
 // Show/hide loading spinner

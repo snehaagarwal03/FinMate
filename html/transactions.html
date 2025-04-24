@@ -1,783 +1,959 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transactions - FinMate</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-  <link rel="stylesheet" href="../css/global.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/transactions.css">
-  
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-</head>
-<body>
-  <div class="transactions-container">
-    <!-- Header -->
-    <header class="header">
-      <div class="header-container">
-        <div class="header-left">
-          <button id="navbar-toggle" class="navbar-toggle">
-            <i class="fas fa-bars"></i>
-          </button>
-          <div class="logo">
-            <img src="../assets/images/logo.svg" alt="FinMate Logo">
-            <span class="logo-text">FinMate</span>
-          </div>
-        </div>
-        <div class="header-right">
-          <div class="profile-dropdown">
-            <button id="profile-toggle" class="profile-toggle">
-              <i class="fas fa-user"></i>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transactions - FinMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/transactions.css" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  </head>
+  <body>
+    <div class="transactions-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-container">
+          <div class="header-left">
+            <button id="navbar-toggle" class="navbar-toggle">
+              <i class="fas fa-bars"></i>
             </button>
-            <div class="profile-menu" id="profile-menu">
-              <div class="profile-menu-header">
-                <div class="profile-menu-name" id="profile-name">User Name</div>
-                <div class="profile-menu-email" id="profile-email">user@example.com</div>
+            <div class="logo">
+              <img src="../assets/images/logo.svg" alt="FinMate Logo" />
+              <span class="logo-text">FinMate</span>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="profile-dropdown">
+              <button id="profile-toggle" class="profile-toggle">
+                <i class="fas fa-user"></i>
+              </button>
+              <div class="profile-menu" id="profile-menu">
+                <div class="profile-menu-header">
+                  <div class="profile-menu-name" id="profile-name">
+                    User Name
+                  </div>
+                  <div class="profile-menu-email" id="profile-email">
+                    user@example.com
+                  </div>
+                </div>
+                <ul class="profile-menu-items">
+                  <li class="profile-menu-item">
+                    <a href="dashboard.html" class="profile-menu-link">
+                      <i class="fas fa-tachometer-alt"></i>
+                      Dashboard
+                    </a>
+                  </li>
+                  <li class="profile-menu-item">
+                    <a href="profile.html" class="profile-menu-link">
+                      <i class="fas fa-user"></i>
+                      Profile
+                    </a>
+                  </li>
+                  <li class="profile-menu-divider"></li>
+                  <li class="profile-menu-item">
+                    <a
+                      href="#"
+                      id="logout-btn"
+                      class="profile-menu-link logout-btn"
+                    >
+                      <i class="fas fa-sign-out-alt"></i>
+                      Logout
+                    </a>
+                  </li>
+                </ul>
               </div>
-              <ul class="profile-menu-items">
-                <li class="profile-menu-item">
-                  <a href="dashboard.html" class="profile-menu-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                  </a>
-                </li>
-                <li class="profile-menu-item">
-                  <a href="profile.html" class="profile-menu-link">
-                    <i class="fas fa-user"></i>
-                    Profile
-                  </a>
-                </li>
-                <li class="profile-menu-divider"></li>
-                <li class="profile-menu-item">
-                  <a href="#" id="logout-btn" class="profile-menu-link logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                  </a>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
+      </header>
+
+      <div class="transactions-content">
+        <!-- Side Navigation -->
+        <nav class="sidenav" id="sidenav">
+          <ul class="sidenav-menu">
+            <li class="sidenav-item">
+              <a href="dashboard.html" class="sidenav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="transactions.html" class="sidenav-link active">
+                <i class="fas fa-exchange-alt"></i>
+                Transactions
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="insights.html" class="sidenav-link">
+                <i class="fas fa-chart-bar"></i>
+                Insights
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="budgeting.html" class="sidenav-link">
+                <i class="fas fa-bullseye"></i>
+                Budgeting
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="profile.html" class="sidenav-link">
+                <i class="fas fa-user"></i>
+                Profile
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="transactions-main">
+          <div class="transactions-header">
+            <h2>Transactions</h2>
+            <button id="add-transaction-btn" class="add-transaction-btn">
+              <i class="fas fa-plus"></i> Add Transaction
+            </button>
+          </div>
+
+          <!-- Filters Section -->
+          <div class="transactions-filters">
+            <div class="filter-group">
+              <label for="category-filter">Category</label>
+              <select id="category-filter">
+                <option value="">All Categories</option>
+                <!-- Categories will be populated via JavaScript -->
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="date-from-filter">From Date</label>
+              <input type="date" id="date-from-filter" />
+            </div>
+            <div class="filter-group">
+              <label for="date-to-filter">To Date</label>
+              <input type="date" id="date-to-filter" />
+            </div>
+            <div class="filter-group">
+              <label for="type-filter">Type</label>
+              <select id="type-filter">
+                <option value="">All</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+            </div>
+            <div class="filter-buttons">
+              <button id="apply-filters-btn" class="apply-filters-btn">
+                Apply Filters
+              </button>
+              <button id="reset-filters-btn" class="reset-filters-btn">
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Transactions Table -->
+          <div class="transactions-table-container">
+            <table id="transactions-table" class="transactions-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-table-body">
+                <!-- Transactions will be populated via JavaScript -->
+              </tbody>
+            </table>
+
+            <!-- Empty State -->
+            <div
+              class="empty-transactions"
+              id="empty-transactions"
+              style="display: none"
+            >
+              <i class="fas fa-receipt"></i>
+              <h3>No Transactions Found</h3>
+              <p>Start adding transactions to track your expenses and income</p>
+            </div>
+          </div>
+        </main>
       </div>
-    </header>
 
-    <div class="transactions-content">
-      <!-- Side Navigation -->
-      <nav class="sidenav" id="sidenav">
-        <ul class="sidenav-menu">
-          <li class="sidenav-item">
-            <a href="dashboard.html" class="sidenav-link">
-              <i class="fas fa-tachometer-alt"></i>
-              Dashboard
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="transactions.html" class="sidenav-link active">
-              <i class="fas fa-exchange-alt"></i>
-              Transactions
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="insights.html" class="sidenav-link">
-              <i class="fas fa-chart-bar"></i>
-              Insights
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="budgeting.html" class="sidenav-link">
-              <i class="fas fa-bullseye"></i>
-              Budgeting
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="profile.html" class="sidenav-link">
-              <i class="fas fa-user"></i>
-              Profile
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <!-- Main Content -->
-      <main class="transactions-main">
-        <div class="transactions-header">
-          <h2>Transactions</h2>
-          <button id="add-transaction-btn" class="add-transaction-btn">
-            <i class="fas fa-plus"></i> Add Transaction
-          </button>
-        </div>
-
-        <!-- Filters Section -->
-        <div class="transactions-filters">
-          <div class="filter-group">
-            <label for="category-filter">Category</label>
-            <select id="category-filter">
-              <option value="">All Categories</option>
-              <!-- Categories will be populated via JavaScript -->
-            </select>
-          </div>
-          <div class="filter-group">
-            <label for="date-from-filter">From Date</label>
-            <input type="date" id="date-from-filter">
-          </div>
-          <div class="filter-group">
-            <label for="date-to-filter">To Date</label>
-            <input type="date" id="date-to-filter">
-          </div>
-          <div class="filter-group">
-            <label for="type-filter">Type</label>
-            <select id="type-filter">
-              <option value="">All</option>
-              <option value="income">Income</option>
-              <option value="expense">Expense</option>
-            </select>
-          </div>
-          <div class="filter-buttons">
-            <button id="apply-filters-btn" class="apply-filters-btn">Apply Filters</button>
-            <button id="reset-filters-btn" class="reset-filters-btn">Reset</button>
-          </div>
-        </div>
-
-        <!-- Transactions Table -->
-        <div class="transactions-table-container">
-          <table id="transactions-table" class="transactions-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="transactions-table-body">
-              <!-- Transactions will be populated via JavaScript -->
-            </tbody>
-          </table>
-
-          <!-- Empty State -->
-          <div class="empty-transactions" id="empty-transactions" style="display: none;">
-            <i class="fas fa-receipt"></i>
-            <h3>No Transactions Found</h3>
-            <p>Start adding transactions to track your expenses and income</p>
-          </div>
-        </div>
-      </main>
-    </div>
-
-    <!-- Add Transaction Modal -->
-    <div id="transaction-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
+      <!-- Add Transaction Modal -->
+      <div id="transaction-modal" class="modal">
+        <div class="modal-content">
           <h3>Add Transaction</h3>
-          <button class="modal-close">&times;</button>
-        </div>
-        <form id="transaction-form" class="transaction-form">
-          <div class="form-group">
-            <label for="transaction-amount">Amount (₹)</label>
-            <input type="number" id="transaction-amount" min="0" step="0.01" required>
-          </div>
-          <div class="form-group">
-            <label for="transaction-date">Date</label>
-            <input type="date" id="transaction-date" required>
-          </div>
-          <div class="form-group">
-            <label for="transaction-category">Category</label>
-            <select id="transaction-category" required>
-              <!-- Categories will be populated via JavaScript -->
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="transaction-description">Description</label>
-            <textarea id="transaction-description" rows="3" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>Type</label>
-            <div class="transaction-type-toggle">
-              <div class="type-toggle-btn income">Income</div>
-              <div class="type-toggle-btn expense active">Expense</div>
+          <form id="transaction-form" class="transaction-form">
+            <div class="form-group">
+              <label for="transaction-amount">Amount (₹)</label>
+              <input
+                type="number"
+                id="transaction-amount"
+                min="0"
+                step="0.01"
+                required
+              />
             </div>
-            <input type="hidden" id="transaction-type" value="expense">
-          </div>
-          <button type="submit" class="submit-transaction-btn">Add Transaction</button>
-        </form>
+            <div class="form-group">
+              <label for="transaction-date">Date</label>
+              <input type="date" id="transaction-date" required />
+            </div>
+            <div class="form-group">
+              <label for="transaction-category">Category</label>
+              <select id="transaction-category" required>
+                <!-- Categories will be populated via JavaScript -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="transaction-description">Description</label>
+              <textarea
+                id="transaction-description"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label>Type</label>
+              <div class="transaction-type-toggle">
+                <div class="type-toggle-btn income">Income</div>
+                <div class="type-toggle-btn expense active">Expense</div>
+              </div>
+              <input type="hidden" id="transaction-type" value="expense" />
+            </div>
+            <button type="submit" class="submit-transaction-btn">
+              Add Transaction
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
 
-    <!-- Edit Transaction Modal -->
-    <div id="edit-transaction-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
+      <!-- Edit Transaction Modal -->
+      <div id="edit-transaction-modal" class="modal">
+        <div class="modal-content">
           <h3>Edit Transaction</h3>
-          <button class="modal-close">&times;</button>
-        </div>
-        <form id="edit-transaction-form" class="transaction-form">
-          <div class="form-group">
-            <label for="edit-transaction-amount">Amount (₹)</label>
-            <input type="number" id="edit-transaction-amount" min="0" step="0.01" required>
-          </div>
-          <div class="form-group">
-            <label for="edit-transaction-date">Date</label>
-            <input type="date" id="edit-transaction-date" required>
-          </div>
-          <div class="form-group">
-            <label for="edit-transaction-category">Category</label>
-            <select id="edit-transaction-category" required>
-              <!-- Categories will be populated via JavaScript -->
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="edit-transaction-description">Description</label>
-            <textarea id="edit-transaction-description" rows="3" required></textarea>
-          </div>
-          <div class="form-group">
-            <label>Type</label>
-            <div class="transaction-type-toggle">
-              <div class="type-toggle-btn income">Income</div>
-              <div class="type-toggle-btn expense">Expense</div>
+          <form id="edit-transaction-form" class="transaction-form">
+            <div class="form-group">
+              <label for="edit-transaction-amount">Amount (₹)</label>
+              <input
+                type="number"
+                id="edit-transaction-amount"
+                min="0"
+                step="0.01"
+                required
+              />
             </div>
-            <input type="hidden" id="edit-transaction-type" value="expense">
+            <div class="form-group">
+              <label for="edit-transaction-date">Date</label>
+              <input type="date" id="edit-transaction-date" required />
+            </div>
+            <div class="form-group">
+              <label for="edit-transaction-category">Category</label>
+              <select id="edit-transaction-category" required>
+                <!-- Categories will be populated via JavaScript -->
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="edit-transaction-description">Description</label>
+              <textarea
+                id="edit-transaction-description"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label>Type</label>
+              <div class="transaction-type-toggle">
+                <div class="type-toggle-btn income">Income</div>
+                <div class="type-toggle-btn expense">Expense</div>
+              </div>
+              <input type="hidden" id="edit-transaction-type" value="expense" />
+            </div>
+            <button type="submit" class="submit-transaction-btn">
+              Update Transaction
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div id="confirmation-modal" class="modal confirmation-modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Confirm Delete</h3>
+            <button class="modal-close">&times;</button>
           </div>
-          <button type="submit" class="submit-transaction-btn">Update Transaction</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Delete Confirmation Modal -->
-    <div id="confirmation-modal" class="modal confirmation-modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>Confirm Delete</h3>
-          <button class="modal-close">&times;</button>
-        </div>
-        <p>Are you sure you want to delete this transaction? This action cannot be undone.</p>
-        <div class="confirmation-buttons">
-          <button id="confirm-btn" class="confirm-btn">Delete</button>
-          <button id="cancel-btn" class="cancel-btn">Cancel</button>
+          <p>
+            Are you sure you want to delete this transaction? This action cannot
+            be undone.
+          </p>
+          <div class="confirmation-buttons">
+            <button id="confirm-btn" class="confirm-btn">Delete</button>
+            <button id="cancel-btn" class="cancel-btn">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Loading Spinner -->
-  <div class="loading-spinner" id="loading-spinner" style="display: none;">
-    <div class="spinner"></div>
-  </div>
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loading-spinner" style="display: none">
+      <div class="spinner"></div>
+    </div>
 
-  <!-- Toast Container -->
-  <div class="toast-container"></div>
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
 
-  <!-- Load Firebase Config -->
-  <script src="../js/firebase-config.js"></script>
-  
-  <!-- Transactions Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // DOM Elements
-      const transactionsTable = document.getElementById('transactions-table');
-      const transactionsTableBody = document.getElementById('transactions-table-body');
-      const addTransactionBtn = document.getElementById('add-transaction-btn');
-      const transactionModal = document.getElementById('transaction-modal');
-      const editTransactionModal = document.getElementById('edit-transaction-modal');
-      const confirmationModal = document.getElementById('confirmation-modal');
-      const transactionForm = document.getElementById('transaction-form');
-      const editTransactionForm = document.getElementById('edit-transaction-form');
-      const categoryFilter = document.getElementById('category-filter');
-      const dateFromFilter = document.getElementById('date-from-filter');
-      const dateToFilter = document.getElementById('date-to-filter');
-      const typeFilter = document.getElementById('type-filter');
-      const applyFiltersBtn = document.getElementById('apply-filters-btn');
-      const resetFiltersBtn = document.getElementById('reset-filters-btn');
-      const emptyTransactions = document.getElementById('empty-transactions');
-      const loadingSpinner = document.getElementById('loading-spinner');
-      const navbarToggle = document.getElementById('navbar-toggle');
-      const sideNav = document.getElementById('sidenav');
-      const profileToggle = document.getElementById('profile-toggle');
-      const profileMenu = document.getElementById('profile-menu');
-      const profileName = document.getElementById('profile-name');
-      const profileEmail = document.getElementById('profile-email');
-      const logoutBtn = document.getElementById('logout-btn');
-      
-      // Current user and edited transaction
-      let currentUser = null;
-      let currentTransactionId = null;
-      let allTransactions = [];
-      
-      // Category list for the app
-      const categories = [
-        'Food', 'Shopping', 'Transportation', 'Entertainment', 'Utilities',
-        'Housing', 'Healthcare', 'Education', 'Travel', 'Personal',
-        'Salary', 'Investment', 'Gift', 'Other'
-      ];
-      
-      // Check if user is logged in
-      firebase.auth().onAuthStateChanged(async function(user) {
-        if (user) {
-          // User is logged in
-          currentUser = user;
-          
-          // Update profile information
-          if (profileEmail) profileEmail.textContent = user.email;
-          
-          // Get user name from Firestore
-          try {
-            const userDoc = await firebase.firestore().collection('users').doc(user.uid).get();
-            
-            if (userDoc.exists) {
-              const userData = userDoc.data();
-              
-              if (profileName) profileName.textContent = userData.name || 'User';
+    <!-- Load Firebase Config -->
+    <script src="../js/firebase-config.js"></script>
+
+    <!-- Transactions Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // DOM Elements
+        const transactionsTable = document.getElementById("transactions-table");
+        const transactionsTableBody = document.getElementById(
+          "transactions-table-body"
+        );
+        const addTransactionBtn = document.getElementById(
+          "add-transaction-btn"
+        );
+        const transactionModal = document.getElementById("transaction-modal");
+        const editTransactionModal = document.getElementById(
+          "edit-transaction-modal"
+        );
+        const confirmationModal = document.getElementById("confirmation-modal");
+        const transactionForm = document.getElementById("transaction-form");
+        const editTransactionForm = document.getElementById(
+          "edit-transaction-form"
+        );
+        const categoryFilter = document.getElementById("category-filter");
+        const dateFromFilter = document.getElementById("date-from-filter");
+        const dateToFilter = document.getElementById("date-to-filter");
+        const typeFilter = document.getElementById("type-filter");
+        const applyFiltersBtn = document.getElementById("apply-filters-btn");
+        const resetFiltersBtn = document.getElementById("reset-filters-btn");
+        const emptyTransactions = document.getElementById("empty-transactions");
+        const loadingSpinner = document.getElementById("loading-spinner");
+        const navbarToggle = document.getElementById("navbar-toggle");
+        const sideNav = document.getElementById("sidenav");
+        const profileToggle = document.getElementById("profile-toggle");
+        const profileMenu = document.getElementById("profile-menu");
+        const profileName = document.getElementById("profile-name");
+        const profileEmail = document.getElementById("profile-email");
+        const logoutBtn = document.getElementById("logout-btn");
+
+        // Current user and edited transaction
+        let currentUser = null;
+        let currentTransactionId = null;
+        let allTransactions = [];
+
+        // Category list for the app
+        const categories = [
+          "Food",
+          "Shopping",
+          "Transportation",
+          "Entertainment",
+          "Utilities",
+          "Housing",
+          "Healthcare",
+          "Education",
+          "Travel",
+          "Personal",
+          "Salary",
+          "Investment",
+          "Gift",
+          "Other",
+        ];
+
+        // Check if user is logged in
+        firebase.auth().onAuthStateChanged(async function (user) {
+          if (user) {
+            // User is logged in
+            currentUser = user;
+
+            // Update profile information
+            if (profileEmail) profileEmail.textContent = user.email;
+
+            // Get user name from Firestore
+            try {
+              const userDoc = await firebase
+                .firestore()
+                .collection("users")
+                .doc(user.uid)
+                .get();
+
+              if (userDoc.exists) {
+                const userData = userDoc.data();
+
+                if (profileName)
+                  profileName.textContent = userData.name || "User";
+              }
+            } catch (error) {
+              console.error("Error getting user data:", error);
             }
-          } catch (error) {
-            console.error('Error getting user data:', error);
+
+            // Populate category options
+            populateCategoryOptions();
+
+            // Load transactions
+            loadTransactions();
+          } else {
+            // User is not logged in, redirect to login page
+            window.location.href = "login.html";
           }
-          
-          // Populate category options
-          populateCategoryOptions();
-          
-          // Load transactions
-          loadTransactions();
-        } else {
-          // User is not logged in, redirect to login page
-          window.location.href = 'login.html';
+        });
+
+        // Initialize sidebar toggle
+        if (navbarToggle && sideNav) {
+          navbarToggle.addEventListener("click", function () {
+            sideNav.classList.toggle("active");
+          });
         }
-      });
-      
-      // Initialize sidebar toggle
-      if (navbarToggle && sideNav) {
-        navbarToggle.addEventListener('click', function() {
-          sideNav.classList.toggle('active');
+
+        // Initialize profile dropdown toggle
+        if (profileToggle && profileMenu) {
+          profileToggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+            profileMenu.classList.toggle("active");
+          });
+
+          // Close profile menu when clicking outside
+          document.addEventListener("click", function (e) {
+            if (
+              profileMenu.classList.contains("active") &&
+              !profileMenu.contains(e.target) &&
+              e.target !== profileToggle
+            ) {
+              profileMenu.classList.remove("active");
+            }
+          });
+        }
+
+        // Logout functionality
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            firebase
+              .auth()
+              .signOut()
+              .then(() => {
+                // Redirect to login page
+                window.location.href = "login.html";
+              })
+              .catch((error) => {
+                console.error("Error signing out:", error);
+                showToast("Error signing out. Please try again.", "error");
+              });
+          });
+        }
+
+        // Add transaction button
+        if (addTransactionBtn && transactionModal) {
+          addTransactionBtn.addEventListener("click", function () {
+            // Reset form
+            if (transactionForm) {
+              transactionForm.reset();
+
+              // Set default date to today
+              const today = new Date().toISOString().split("T")[0];
+              const dateInput = document.getElementById("transaction-date");
+              if (dateInput) {
+                dateInput.value = today;
+              }
+
+              // Set default type
+              const incomeToggle = document.querySelector(
+                "#transaction-form .type-toggle-btn.income"
+              );
+              const expenseToggle = document.querySelector(
+                "#transaction-form .type-toggle-btn.expense"
+              );
+
+              if (incomeToggle && expenseToggle) {
+                incomeToggle.classList.remove("active");
+                expenseToggle.classList.add("active");
+                document.getElementById("transaction-type").value = "expense";
+              }
+            }
+
+            // Show modal
+            transactionModal.classList.add("active");
+          });
+        }
+
+        // Close modal buttons
+        const closeButtons = document.querySelectorAll(".modal-close");
+        closeButtons.forEach((button) => {
+          button.addEventListener("click", function () {
+            const modal = button.closest(".modal");
+            if (modal) {
+              modal.classList.remove("active");
+            }
+          });
         });
-      }
-      
-      // Initialize profile dropdown toggle
-      if (profileToggle && profileMenu) {
-        profileToggle.addEventListener('click', function(e) {
-          e.stopPropagation();
-          profileMenu.classList.toggle('active');
+
+        // Close modal when clicking outside
+        const modals = document.querySelectorAll(".modal");
+        modals.forEach((modal) => {
+          modal.addEventListener("click", function (e) {
+            if (e.target === modal) {
+              modal.classList.remove("active");
+            }
+          });
         });
-        
-        // Close profile menu when clicking outside
-        document.addEventListener('click', function(e) {
-          if (profileMenu.classList.contains('active') && !profileMenu.contains(e.target) && e.target !== profileToggle) {
-            profileMenu.classList.remove('active');
-          }
-        });
-      }
-      
-      // Logout functionality
-      if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          
-          firebase.auth().signOut()
-            .then(() => {
-              // Redirect to login page
-              window.location.href = 'login.html';
-            })
-            .catch((error) => {
-              console.error('Error signing out:', error);
-              showToast('Error signing out. Please try again.', 'error');
+
+        // Transaction type toggle in add form
+        const addIncomeToggle = document.querySelector(
+          "#transaction-form .type-toggle-btn.income"
+        );
+        const addExpenseToggle = document.querySelector(
+          "#transaction-form .type-toggle-btn.expense"
+        );
+        const addTypeInput = document.getElementById("transaction-type");
+
+        if (addIncomeToggle && addExpenseToggle && addTypeInput) {
+          addIncomeToggle.addEventListener("click", function () {
+            addIncomeToggle.classList.add("active");
+            addExpenseToggle.classList.remove("active");
+            addTypeInput.value = "income";
+          });
+
+          addExpenseToggle.addEventListener("click", function () {
+            addExpenseToggle.classList.add("active");
+            addIncomeToggle.classList.remove("active");
+            addTypeInput.value = "expense";
+          });
+        }
+
+        // Transaction type toggle in edit form
+        const editIncomeToggle = document.querySelector(
+          "#edit-transaction-form .type-toggle-btn.income"
+        );
+        const editExpenseToggle = document.querySelector(
+          "#edit-transaction-form .type-toggle-btn.expense"
+        );
+        const editTypeInput = document.getElementById("edit-transaction-type");
+
+        if (editIncomeToggle && editExpenseToggle && editTypeInput) {
+          editIncomeToggle.addEventListener("click", function () {
+            editIncomeToggle.classList.add("active");
+            editExpenseToggle.classList.remove("active");
+            editTypeInput.value = "income";
+          });
+
+          editExpenseToggle.addEventListener("click", function () {
+            editExpenseToggle.classList.add("active");
+            editIncomeToggle.classList.remove("active");
+            editTypeInput.value = "expense";
+          });
+        }
+
+        // Add transaction form submission
+        if (transactionForm) {
+          transactionForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            if (!currentUser) return;
+
+            showLoading(true);
+
+            try {
+              // Get form values
+              const amount =
+                document.getElementById("transaction-amount").value;
+              const date = document.getElementById("transaction-date").value;
+              const category = document.getElementById(
+                "transaction-category"
+              ).value;
+              const description = document.getElementById(
+                "transaction-description"
+              ).value;
+              const type = document.getElementById("transaction-type").value;
+
+              // Validate form
+              if (!amount || !date || !category || !description || !type) {
+                showToast("Please fill out all fields", "error");
+                showLoading(false);
+                return;
+              }
+
+              // Create transaction object
+              const transaction = {
+                amount: parseFloat(amount),
+                date: date,
+                category: category,
+                description: description,
+                type: type,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              };
+
+              // Add transaction to Firestore
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(currentUser.uid)
+                .collection("transactions")
+                .add(transaction);
+
+              // Show success message
+              showToast("Transaction added successfully", "success");
+
+              // Reset form
+              transactionForm.reset();
+
+              // Close modal
+              if (transactionModal) {
+                transactionModal.classList.remove("active");
+              }
+
+              // Reload transactions
+              loadTransactions();
+            } catch (error) {
+              console.error("Error adding transaction:", error);
+              showToast(
+                "Error adding transaction. Please try again.",
+                "error"
+              );
+              showLoading(false);
+            }
+          });
+        }
+
+        // Edit transaction form submission
+        if (editTransactionForm) {
+          editTransactionForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            if (!currentUser || !currentTransactionId) return;
+
+            showLoading(true);
+
+            try {
+              // Get form values
+              const amount = document.getElementById(
+                "edit-transaction-amount"
+              ).value;
+              const date = document.getElementById("edit-transaction-date")
+                .value;
+              const category = document.getElementById(
+                "edit-transaction-category"
+              ).value;
+              const description = document.getElementById(
+                "edit-transaction-description"
+              ).value;
+              const type = document.getElementById("edit-transaction-type")
+                .value;
+
+              // Validate form
+              if (!amount || !date || !category || !description || !type) {
+                showToast("Please fill out all fields", "error");
+                showLoading(false);
+                return;
+              }
+
+              // Create transaction object
+              const transaction = {
+                amount: parseFloat(amount),
+                date: date,
+                category: category,
+                description: description,
+                type: type,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              };
+
+              // Update transaction in Firestore
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(currentUser.uid)
+                .collection("transactions")
+                .doc(currentTransactionId)
+                .update(transaction);
+
+              // Show success message
+              showToast("Transaction updated successfully", "success");
+
+              // Reset form
+              editTransactionForm.reset();
+
+              // Close modal
+              if (editTransactionModal) {
+                editTransactionModal.classList.remove("active");
+              }
+
+              // Reload transactions
+              loadTransactions();
+            } catch (error) {
+              console.error("Error updating transaction:", error);
+              showToast(
+                "Error updating transaction. Please try again.",
+                "error"
+              );
+              showLoading(false);
+            }
+          });
+        }
+
+        // Cancel button in confirmation modal
+        const cancelBtn = document.getElementById("cancel-btn");
+        if (cancelBtn && confirmationModal) {
+          cancelBtn.addEventListener("click", function () {
+            confirmationModal.classList.remove("active");
+          });
+        }
+
+        // Confirm delete button
+        const confirmBtn = document.getElementById("confirm-btn");
+        if (confirmBtn && confirmationModal) {
+          confirmBtn.addEventListener("click", async function () {
+            if (!currentUser || !currentTransactionId) return;
+
+            showLoading(true);
+
+            try {
+              // Delete transaction from Firestore
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(currentUser.uid)
+                .collection("transactions")
+                .doc(currentTransactionId)
+                .delete();
+
+              // Show success message
+              showToast("Transaction deleted successfully", "success");
+
+              // Close modal
+              confirmationModal.classList.remove("active");
+
+              // Reload transactions
+              loadTransactions();
+            } catch (error) {
+              console.error("Error deleting transaction:", error);
+              showToast(
+                "Error deleting transaction. Please try again.",
+                "error"
+              );
+              showLoading(false);
+            }
+          });
+        }
+
+        // Apply filters button
+        if (applyFiltersBtn) {
+          applyFiltersBtn.addEventListener("click", function () {
+            loadTransactions();
+          });
+        }
+
+        // Reset filters button
+        if (resetFiltersBtn) {
+          resetFiltersBtn.addEventListener("click", function () {
+            if (categoryFilter) categoryFilter.value = "";
+            if (dateFromFilter) dateFromFilter.value = "";
+            if (dateToFilter) dateToFilter.value = "";
+            if (typeFilter) typeFilter.value = "";
+
+            loadTransactions();
+          });
+        }
+
+        // Populate category options
+        function populateCategoryOptions() {
+          // Populate filter dropdown
+          if (categoryFilter) {
+            categoryFilter.innerHTML =
+              '<option value="">All Categories</option>';
+
+            categories.forEach((category) => {
+              const option = document.createElement("option");
+              option.value = category;
+              option.textContent = category;
+              categoryFilter.appendChild(option);
             });
-        });
-      }
-      
-      // Add transaction button
-      if (addTransactionBtn && transactionModal) {
-        addTransactionBtn.addEventListener('click', function() {
-          // Reset form
-          if (transactionForm) {
-            transactionForm.reset();
-            
-            // Set default date to today
-            const today = new Date().toISOString().split('T')[0];
-            const dateInput = document.getElementById('transaction-date');
-            if (dateInput) {
-              dateInput.value = today;
-            }
-            
-            // Set default type
-            const incomeToggle = document.querySelector('#transaction-form .type-toggle-btn.income');
-            const expenseToggle = document.querySelector('#transaction-form .type-toggle-btn.expense');
-            
-            if (incomeToggle && expenseToggle) {
-              incomeToggle.classList.remove('active');
-              expenseToggle.classList.add('active');
-              document.getElementById('transaction-type').value = 'expense';
-            }
           }
-          
-          // Show modal
-          transactionModal.classList.add('active');
-        });
-      }
-      
-      // Close modal buttons
-      const closeButtons = document.querySelectorAll('.modal-close');
-      closeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          const modal = button.closest('.modal');
-          if (modal) {
-            modal.classList.remove('active');
+
+          // Populate add form category dropdown
+          const addCategorySelect = document.getElementById(
+            "transaction-category"
+          );
+          if (addCategorySelect) {
+            addCategorySelect.innerHTML = "";
+
+            categories.forEach((category) => {
+              const option = document.createElement("option");
+              option.value = category;
+              option.textContent = category;
+              addCategorySelect.appendChild(option);
+            });
           }
-        });
-      });
-      
-      // Close modal when clicking outside
-      const modals = document.querySelectorAll('.modal');
-      modals.forEach(modal => {
-        modal.addEventListener('click', function(e) {
-          if (e.target === modal) {
-            modal.classList.remove('active');
+
+          // Populate edit form category dropdown
+          const editCategorySelect = document.getElementById(
+            "edit-transaction-category"
+          );
+          if (editCategorySelect) {
+            editCategorySelect.innerHTML = "";
+
+            categories.forEach((category) => {
+              const option = document.createElement("option");
+              option.value = category;
+              option.textContent = category;
+              editCategorySelect.appendChild(option);
+            });
           }
-        });
-      });
-      
-      // Transaction type toggle in add form
-      const addIncomeToggle = document.querySelector('#transaction-form .type-toggle-btn.income');
-      const addExpenseToggle = document.querySelector('#transaction-form .type-toggle-btn.expense');
-      const addTypeInput = document.getElementById('transaction-type');
-      
-      if (addIncomeToggle && addExpenseToggle && addTypeInput) {
-        addIncomeToggle.addEventListener('click', function() {
-          addIncomeToggle.classList.add('active');
-          addExpenseToggle.classList.remove('active');
-          addTypeInput.value = 'income';
-        });
-        
-        addExpenseToggle.addEventListener('click', function() {
-          addExpenseToggle.classList.add('active');
-          addIncomeToggle.classList.remove('active');
-          addTypeInput.value = 'expense';
-        });
-      }
-      
-      // Transaction type toggle in edit form
-      const editIncomeToggle = document.querySelector('#edit-transaction-form .type-toggle-btn.income');
-      const editExpenseToggle = document.querySelector('#edit-transaction-form .type-toggle-btn.expense');
-      const editTypeInput = document.getElementById('edit-transaction-type');
-      
-      if (editIncomeToggle && editExpenseToggle && editTypeInput) {
-        editIncomeToggle.addEventListener('click', function() {
-          editIncomeToggle.classList.add('active');
-          editExpenseToggle.classList.remove('active');
-          editTypeInput.value = 'income';
-        });
-        
-        editExpenseToggle.addEventListener('click', function() {
-          editExpenseToggle.classList.add('active');
-          editIncomeToggle.classList.remove('active');
-          editTypeInput.value = 'expense';
-        });
-      }
-      
-      // Add transaction form submission
-      if (transactionForm) {
-        transactionForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          
+        }
+
+        // Load transactions
+        async function loadTransactions() {
           if (!currentUser) return;
-          
+
           showLoading(true);
-          
+
           try {
-            // Get form values
-            const amount = document.getElementById('transaction-amount').value;
-            const date = document.getElementById('transaction-date').value;
-            const category = document.getElementById('transaction-category').value;
-            const description = document.getElementById('transaction-description').value;
-            const type = document.getElementById('transaction-type').value;
-            
-            // Validate form
-            if (!amount || !date || !category || !description || !type) {
-              showToast('Please fill out all fields', 'error');
-              showLoading(false);
-              return;
+            const transactionsRef = firebase
+              .firestore()
+              .collection("users")
+              .doc(currentUser.uid)
+              .collection("transactions");
+            let query = transactionsRef.orderBy("date", "desc");
+
+            // Apply type filter
+            if (typeFilter && typeFilter.value) {
+              query = query.where("type", "==", typeFilter.value);
             }
-            
-            // Create transaction object
-            const transaction = {
-              amount: parseFloat(amount),
-              date: date,
-              category: category,
-              description: description,
-              type: type,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            
-            // Add transaction to Firestore
-            await firebase.firestore().collection('users').doc(currentUser.uid).collection('transactions').add(transaction);
-            
-            // Show success message
-            showToast('Transaction added successfully', 'success');
-            
-            // Reset form
-            transactionForm.reset();
-            
-            // Close modal
-            if (transactionModal) {
-              transactionModal.classList.remove('active');
+
+            // Apply category filter
+            if (categoryFilter && categoryFilter.value) {
+              query = query.where("category", "==", categoryFilter.value);
             }
-            
-            // Reload transactions
-            loadTransactions();
+
+            // Get transactions
+            const snapshot = await query.get();
+
+            // Store all transactions
+            allTransactions = [];
+
+            snapshot.forEach((doc) => {
+              allTransactions.push({
+                id: doc.id,
+                ...doc.data(),
+              });
+            });
+
+            // Log all transactions for debugging
+            console.log("Fetched transactions:", allTransactions);
+
+            // Defensive: Only filter if date is valid and present
+            if (dateFromFilter && dateFromFilter.value) {
+              const fromDate = new Date(dateFromFilter.value);
+              allTransactions = allTransactions.filter((transaction, idx) => {
+                try {
+                  console.log(`Checking transaction #${idx}:`, transaction);
+                  if (!transaction.date) return false;
+                  if (!/^\d{4}-\d{2}-\d{2}$/.test(transaction.date))
+                    return false;
+                  const txDate = new Date(transaction.date);
+                  if (isNaN(txDate)) return false;
+                  return txDate >= fromDate;
+                } catch (err) {
+                  console.error(
+                    'Date filter error for transaction:',
+                    transaction,
+                    err
+                  );
+                  return false;
+                }
+              });
+            }
+
+            if (dateToFilter && dateToFilter.value) {
+              const toDate = new Date(dateToFilter.value);
+              allTransactions = allTransactions.filter((transaction, idx) => {
+                try {
+                  console.log(`Checking transaction #${idx}:`, transaction);
+                  if (!transaction.date) return false;
+                  if (!/^\d{4}-\d{2}-\d{2}$/.test(transaction.date))
+                    return false;
+                  const txDate = new Date(transaction.date);
+                  if (isNaN(txDate)) return false;
+                  return txDate <= toDate;
+                } catch (err) {
+                  console.error(
+                    'Date filter error for transaction:',
+                    transaction,
+                    err
+                  );
+                  return false;
+                }
+              });
+            }
+
+            // Display transactions
+            displayTransactions();
+
+            showLoading(false);
           } catch (error) {
-            console.error('Error adding transaction:', error);
-            showToast('Error adding transaction. Please try again.', 'error');
+            console.error("Error loading transactions (details):", error);
+            showToast(
+              "Error loading transactions. See console for details.",
+              "error"
+            );
             showLoading(false);
           }
-        });
-      }
-      
-      // Edit transaction form submission
-      if (editTransactionForm) {
-        editTransactionForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          
-          if (!currentUser || !currentTransactionId) return;
-          
-          showLoading(true);
-          
-          try {
-            // Get form values
-            const amount = document.getElementById('edit-transaction-amount').value;
-            const date = document.getElementById('edit-transaction-date').value;
-            const category = document.getElementById('edit-transaction-category').value;
-            const description = document.getElementById('edit-transaction-description').value;
-            const type = document.getElementById('edit-transaction-type').value;
-            
-            // Validate form
-            if (!amount || !date || !category || !description || !type) {
-              showToast('Please fill out all fields', 'error');
-              showLoading(false);
-              return;
-            }
-            
-            // Create transaction object
-            const transaction = {
-              amount: parseFloat(amount),
-              date: date,
-              category: category,
-              description: description,
-              type: type,
-              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            
-            // Update transaction in Firestore
-            await firebase.firestore().collection('users').doc(currentUser.uid).collection('transactions').doc(currentTransactionId).update(transaction);
-            
-            // Show success message
-            showToast('Transaction updated successfully', 'success');
-            
-            // Reset form
-            editTransactionForm.reset();
-            
-            // Close modal
-            if (editTransactionModal) {
-              editTransactionModal.classList.remove('active');
-            }
-            
-            // Reload transactions
-            loadTransactions();
-          } catch (error) {
-            console.error('Error updating transaction:', error);
-            showToast('Error updating transaction. Please try again.', 'error');
-            showLoading(false);
-          }
-        });
-      }
-      
-      // Cancel button in confirmation modal
-      const cancelBtn = document.getElementById('cancel-btn');
-      if (cancelBtn && confirmationModal) {
-        cancelBtn.addEventListener('click', function() {
-          confirmationModal.classList.remove('active');
-        });
-      }
-      
-      // Confirm delete button
-      const confirmBtn = document.getElementById('confirm-btn');
-      if (confirmBtn && confirmationModal) {
-        confirmBtn.addEventListener('click', async function() {
-          if (!currentUser || !currentTransactionId) return;
-          
-          showLoading(true);
-          
-          try {
-            // Delete transaction from Firestore
-            await firebase.firestore().collection('users').doc(currentUser.uid).collection('transactions').doc(currentTransactionId).delete();
-            
-            // Show success message
-            showToast('Transaction deleted successfully', 'success');
-            
-            // Close modal
-            confirmationModal.classList.remove('active');
-            
-            // Reload transactions
-            loadTransactions();
-          } catch (error) {
-            console.error('Error deleting transaction:', error);
-            showToast('Error deleting transaction. Please try again.', 'error');
-            showLoading(false);
-          }
-        });
-      }
-      
-      // Apply filters button
-      if (applyFiltersBtn) {
-        applyFiltersBtn.addEventListener('click', function() {
-          loadTransactions();
-        });
-      }
-      
-      // Reset filters button
-      if (resetFiltersBtn) {
-        resetFiltersBtn.addEventListener('click', function() {
-          if (categoryFilter) categoryFilter.value = '';
-          if (dateFromFilter) dateFromFilter.value = '';
-          if (dateToFilter) dateToFilter.value = '';
-          if (typeFilter) typeFilter.value = '';
-          
-          loadTransactions();
-        });
-      }
-      
-      // Populate category options
-      function populateCategoryOptions() {
-        // Populate filter dropdown
-        if (categoryFilter) {
-          categoryFilter.innerHTML = '<option value="">All Categories</option>';
-          
-          categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            categoryFilter.appendChild(option);
-          });
         }
-        
-        // Populate add form category dropdown
-        const addCategorySelect = document.getElementById('transaction-category');
-        if (addCategorySelect) {
-          addCategorySelect.innerHTML = '';
-          
-          categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            addCategorySelect.appendChild(option);
-          });
-        }
-        
-        // Populate edit form category dropdown
-        const editCategorySelect = document.getElementById('edit-transaction-category');
-        if (editCategorySelect) {
-          editCategorySelect.innerHTML = '';
-          
-          categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            editCategorySelect.appendChild(option);
-          });
-        }
-      }
-      
-      // Load transactions
-      async function loadTransactions() {
-        if (!currentUser) return;
-        
-        showLoading(true);
-        
-        try {
-          const transactionsRef = firebase.firestore().collection('users').doc(currentUser.uid).collection('transactions');
-          let query = transactionsRef.orderBy('date', 'desc');
-          
-          // Apply type filter
-          if (typeFilter && typeFilter.value) {
-            query = query.where('type', '==', typeFilter.value);
+
+        // Display transactions
+        function displayTransactions() {
+          if (
+            !transactionsTableBody ||
+            !transactionsTable ||
+            !emptyTransactions
+          )
+            return;
+
+          // Clear existing rows
+          transactionsTableBody.innerHTML = "";
+
+          // Show/hide empty state
+          if (allTransactions.length === 0) {
+            transactionsTable.style.display = "none";
+            emptyTransactions.style.display = "flex";
+            return;
+          } else {
+            transactionsTable.style.display = "table";
+            emptyTransactions.style.display = "none";
           }
-          
-          // Apply category filter
-          if (categoryFilter && categoryFilter.value) {
-            query = query.where('category', '==', categoryFilter.value);
-          }
-          
-          // Get transactions
-          const snapshot = await query.get();
-          
-          // Store all transactions
-          allTransactions = [];
-          
-          snapshot.forEach(doc => {
-            allTransactions.push({
-              id: doc.id,
-              ...doc.data()
+
+          // Add transaction rows
+          allTransactions.forEach((transaction) => {
+            const row = document.createElement("tr");
+
+            // Format date
+            const date = new Date(transaction.date);
+            const formattedDate = date.toLocaleDateString("en-IN", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
             });
-          });
-          
-          // Apply date filters client-side (Firestore doesn't support range queries on multiple fields)
-          if (dateFromFilter && dateFromFilter.value) {
-            allTransactions = allTransactions.filter(transaction => {
-              return new Date(transaction.date) >= new Date(dateFromFilter.value);
-            });
-          }
-          
-          if (dateToFilter && dateToFilter.value) {
-            allTransactions = allTransactions.filter(transaction => {
-              return new Date(transaction.date) <= new Date(dateToFilter.value);
-            });
-          }
-          
-          // Display transactions
-          displayTransactions();
-          
-          showLoading(false);
-        } catch (error) {
-          console.error('Error loading transactions:', error);
-          showToast('Error loading transactions. Please try again.', 'error');
-          showLoading(false);
-        }
-      }
-      
-      // Display transactions
-      function displayTransactions() {
-        if (!transactionsTableBody || !transactionsTable || !emptyTransactions) return;
-        
-        // Clear existing rows
-        transactionsTableBody.innerHTML = '';
-        
-        // Show/hide empty state
-        if (allTransactions.length === 0) {
-          transactionsTable.style.display = 'none';
-          emptyTransactions.style.display = 'flex';
-          return;
-        } else {
-          transactionsTable.style.display = 'table';
-          emptyTransactions.style.display = 'none';
-        }
-        
-        // Add transaction rows
-        allTransactions.forEach(transaction => {
-          const row = document.createElement('tr');
-          
-          // Format date
-          const date = new Date(transaction.date);
-          const formattedDate = date.toLocaleDateString('en-IN', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          });
-          
-          row.innerHTML = `
+
+            row.innerHTML = `
             <td>${formattedDate}</td>
             <td>${transaction.description}</td>
             <td>
@@ -786,9 +962,14 @@
                 ${transaction.category}
               </span>
             </td>
-            <td>${transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}</td>
+            <td>${
+              transaction.type.charAt(0).toUpperCase() +
+              transaction.type.slice(1)
+            }</td>
             <td class="transaction-amount ${transaction.type}">
-              ${transaction.type === 'income' ? '+' : '-'}${formatCurrency(transaction.amount)}
+              ${transaction.type === "income" ? "+" : "-"}${formatCurrency(
+              transaction.amount
+            )}
             </td>
             <td class="transaction-actions">
               <button class="edit-btn" data-id="${transaction.id}">
@@ -799,172 +980,186 @@
               </button>
             </td>
           `;
-          
-          transactionsTableBody.appendChild(row);
-        });
-        
-        // Add event listeners to edit buttons
-        const editButtons = document.querySelectorAll('.edit-btn');
-        editButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            const transactionId = button.getAttribute('data-id');
-            openEditModal(transactionId);
+
+            transactionsTableBody.appendChild(row);
           });
-        });
-        
-        // Add event listeners to delete buttons
-        const deleteButtons = document.querySelectorAll('.delete-btn');
-        deleteButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            const transactionId = button.getAttribute('data-id');
-            openDeleteConfirmation(transactionId);
+
+          // Add event listeners to edit buttons
+          const editButtons = document.querySelectorAll(".edit-btn");
+          editButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+              const transactionId = button.getAttribute("data-id");
+              openEditModal(transactionId);
+            });
           });
-        });
-      }
-      
-      // Open edit modal
-      function openEditModal(transactionId) {
-        // Find the transaction
-        const transaction = allTransactions.find(t => t.id === transactionId);
-        if (!transaction) return;
-        
-        // Set current transaction ID
-        currentTransactionId = transactionId;
-        
-        // Fill form fields
-        const amountInput = document.getElementById('edit-transaction-amount');
-        const dateInput = document.getElementById('edit-transaction-date');
-        const categorySelect = document.getElementById('edit-transaction-category');
-        const descriptionInput = document.getElementById('edit-transaction-description');
-        const typeInput = document.getElementById('edit-transaction-type');
-        
-        if (amountInput) amountInput.value = transaction.amount;
-        if (dateInput) dateInput.value = transaction.date;
-        if (categorySelect) categorySelect.value = transaction.category;
-        if (descriptionInput) descriptionInput.value = transaction.description;
-        if (typeInput) typeInput.value = transaction.type;
-        
-        // Set type toggle buttons
-        const incomeToggle = document.querySelector('#edit-transaction-form .type-toggle-btn.income');
-        const expenseToggle = document.querySelector('#edit-transaction-form .type-toggle-btn.expense');
-        
-        if (incomeToggle && expenseToggle) {
-          if (transaction.type === 'income') {
-            incomeToggle.classList.add('active');
-            expenseToggle.classList.remove('active');
-          } else {
-            expenseToggle.classList.add('active');
-            incomeToggle.classList.remove('active');
+
+          // Add event listeners to delete buttons
+          const deleteButtons = document.querySelectorAll(".delete-btn");
+          deleteButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+              const transactionId = button.getAttribute("data-id");
+              openDeleteConfirmation(transactionId);
+            });
+          });
+        }
+
+        // Open edit modal
+        function openEditModal(transactionId) {
+          // Find the transaction
+          const transaction = allTransactions.find(
+            (t) => t.id === transactionId
+          );
+          if (!transaction) return;
+
+          // Set current transaction ID
+          currentTransactionId = transactionId;
+
+          // Fill form fields
+          const amountInput = document.getElementById(
+            "edit-transaction-amount"
+          );
+          const dateInput = document.getElementById("edit-transaction-date");
+          const categorySelect = document.getElementById(
+            "edit-transaction-category"
+          );
+          const descriptionInput = document.getElementById(
+            "edit-transaction-description"
+          );
+          const typeInput = document.getElementById("edit-transaction-type");
+
+          if (amountInput) amountInput.value = transaction.amount;
+          if (dateInput) dateInput.value = transaction.date;
+          if (categorySelect) categorySelect.value = transaction.category;
+          if (descriptionInput)
+            descriptionInput.value = transaction.description;
+          if (typeInput) typeInput.value = transaction.type;
+
+          // Set type toggle buttons
+          const incomeToggle = document.querySelector(
+            "#edit-transaction-form .type-toggle-btn.income"
+          );
+          const expenseToggle = document.querySelector(
+            "#edit-transaction-form .type-toggle-btn.expense"
+          );
+
+          if (incomeToggle && expenseToggle) {
+            if (transaction.type === "income") {
+              incomeToggle.classList.add("active");
+              expenseToggle.classList.remove("active");
+            } else {
+              expenseToggle.classList.add("active");
+              incomeToggle.classList.remove("active");
+            }
+          }
+
+          // Show modal
+          if (editTransactionModal) {
+            editTransactionModal.classList.add("active");
           }
         }
-        
-        // Show modal
-        if (editTransactionModal) {
-          editTransactionModal.classList.add('active');
+
+        // Open delete confirmation modal
+        function openDeleteConfirmation(transactionId) {
+          currentTransactionId = transactionId;
+
+          if (confirmationModal) {
+            confirmationModal.classList.add("active");
+          }
         }
-      }
-      
-      // Open delete confirmation modal
-      function openDeleteConfirmation(transactionId) {
-        currentTransactionId = transactionId;
-        
-        if (confirmationModal) {
-          confirmationModal.classList.add('active');
+
+        // Format currency function
+        function formatCurrency(amount) {
+          return new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR",
+            minimumFractionDigits: 2,
+          }).format(amount);
         }
-      }
-      
-      // Format currency function
-      function formatCurrency(amount) {
-        return new Intl.NumberFormat('en-IN', {
-          style: 'currency',
-          currency: 'INR',
-          minimumFractionDigits: 2
-        }).format(amount);
-      }
-      
-      // Get category icon function
-      function getCategoryIcon(category) {
-        switch (category.toLowerCase()) {
-          case 'food':
-            return 'fas fa-utensils';
-          case 'shopping':
-            return 'fas fa-shopping-bag';
-          case 'transportation':
-            return 'fas fa-car';
-          case 'entertainment':
-            return 'fas fa-film';
-          case 'utilities':
-            return 'fas fa-lightbulb';
-          case 'housing':
-            return 'fas fa-home';
-          case 'healthcare':
-            return 'fas fa-medkit';
-          case 'education':
-            return 'fas fa-graduation-cap';
-          case 'travel':
-            return 'fas fa-plane';
-          case 'personal':
-            return 'fas fa-user';
-          case 'salary':
-            return 'fas fa-money-check-alt';
-          case 'investment':
-            return 'fas fa-chart-line';
-          case 'gift':
-            return 'fas fa-gift';
-          case 'other':
-            return 'fas fa-box';
-          default:
-            return 'fas fa-receipt';
+
+        // Get category icon function
+        function getCategoryIcon(category) {
+          switch (category.toLowerCase()) {
+            case "food":
+              return "fas fa-utensils";
+            case "shopping":
+              return "fas fa-shopping-bag";
+            case "transportation":
+              return "fas fa-car";
+            case "entertainment":
+              return "fas fa-film";
+            case "utilities":
+              return "fas fa-lightbulb";
+            case "housing":
+              return "fas fa-home";
+            case "healthcare":
+              return "fas fa-medkit";
+            case "education":
+              return "fas fa-graduation-cap";
+            case "travel":
+              return "fas fa-plane";
+            case "personal":
+              return "fas fa-user";
+            case "salary":
+              return "fas fa-money-check-alt";
+            case "investment":
+              return "fas fa-chart-line";
+            case "gift":
+              return "fas fa-gift";
+            case "other":
+              return "fas fa-box";
+            default:
+              return "fas fa-receipt";
+          }
         }
-      }
-      
-      // Show/hide loading spinner
-      function showLoading(show) {
-        if (loadingSpinner) {
-          loadingSpinner.style.display = show ? 'flex' : 'none';
+
+        // Show/hide loading spinner
+        function showLoading(show) {
+          if (loadingSpinner) {
+            loadingSpinner.style.display = show ? "flex" : "none";
+          }
         }
-      }
-      
-      // Toast notification function
-      function showToast(message, type = 'default') {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        
-        const toastIcon = document.createElement('span');
-        toastIcon.className = 'toast-icon';
-        
-        switch (type) {
-          case 'success':
-            toastIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
-            break;
-          case 'error':
-            toastIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-            break;
-          case 'warning':
-            toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-            break;
-          default:
-            toastIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
+
+        // Toast notification function
+        function showToast(message, type = "default") {
+          const toast = document.createElement("div");
+          toast.className = `toast ${type}`;
+
+          const toastIcon = document.createElement("span");
+          toastIcon.className = "toast-icon";
+
+          switch (type) {
+            case "success":
+              toastIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
+              break;
+            case "error":
+              toastIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+              break;
+            case "warning":
+              toastIcon.innerHTML =
+                '<i class="fas fa-exclamation-triangle"></i>';
+              break;
+            default:
+              toastIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
+          }
+
+          const toastMessage = document.createElement("span");
+          toastMessage.className = "toast-message";
+          toastMessage.textContent = message;
+
+          toast.appendChild(toastIcon);
+          toast.appendChild(toastMessage);
+
+          const toastContainer = document.querySelector(".toast-container");
+          if (toastContainer) {
+            toastContainer.appendChild(toast);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+              toast.remove();
+            }, 3000);
+          }
         }
-        
-        const toastMessage = document.createElement('span');
-        toastMessage.className = 'toast-message';
-        toastMessage.textContent = message;
-        
-        toast.appendChild(toastIcon);
-        toast.appendChild(toastMessage);
-        
-        const toastContainer = document.querySelector('.toast-container');
-        if (toastContainer) {
-          toastContainer.appendChild(toast);
-          
-          // Auto remove after 3 seconds
-          setTimeout(() => {
-            toast.remove();
-          }, 3000);
-        }
-      }
-    });
-  </script>
-</body>
+      });
+    </script>
+  </body>
 </html>

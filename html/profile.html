@@ -1,413 +1,499 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile - FinMate</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-  <link rel="stylesheet" href="../css/global.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/profile.css">
-  
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-</head>
-<body>
-  <div class="profile-container">
-    <!-- Header -->
-    <header class="header">
-      <div class="header-container">
-        <div class="header-left">
-          <button id="navbar-toggle" class="navbar-toggle">
-            <i class="fas fa-bars"></i>
-          </button>
-          <div class="logo">
-            <img src="../assets/images/logo.svg" alt="FinMate Logo">
-            <span class="logo-text">FinMate</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - FinMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/profile.css" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  </head>
+  <body>
+    <div class="profile-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-container">
+          <div class="header-left">
+            <button id="navbar-toggle" class="navbar-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+              <img src="../assets/images/logo.svg" alt="FinMate Logo" />
+              <span class="logo-text">FinMate</span>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="profile-dropdown">
+              <button id="profile-toggle" class="profile-toggle">
+                <i class="fas fa-user"></i>
+              </button>
+              <div class="profile-menu" id="profile-menu">
+                <div class="profile-menu-header">
+                  <div class="profile-menu-name" id="profile-name">
+                    User Name
+                  </div>
+                  <div class="profile-menu-email" id="profile-email">
+                    user@example.com
+                  </div>
+                </div>
+                <ul class="profile-menu-items">
+                  <li class="profile-menu-item">
+                    <a href="dashboard.html" class="profile-menu-link">
+                      <i class="fas fa-tachometer-alt"></i>
+                      Dashboard
+                    </a>
+                  </li>
+                  <li class="profile-menu-item">
+                    <a href="profile.html" class="profile-menu-link">
+                      <i class="fas fa-user"></i>
+                      Profile
+                    </a>
+                  </li>
+                  <li class="profile-menu-divider"></li>
+                  <li class="profile-menu-item">
+                    <a
+                      href="#"
+                      id="logout-btn"
+                      class="profile-menu-link logout-btn"
+                    >
+                      <i class="fas fa-sign-out-alt"></i>
+                      Logout
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="header-right">
-          <div class="profile-dropdown">
-            <button id="profile-toggle" class="profile-toggle">
-              <i class="fas fa-user"></i>
-            </button>
-            <div class="profile-menu" id="profile-menu">
-              <div class="profile-menu-header">
-                <div class="profile-menu-name" id="profile-name">User Name</div>
-                <div class="profile-menu-email" id="profile-email">user@example.com</div>
+      </header>
+
+      <div class="profile-content">
+        <!-- Side Navigation -->
+        <nav class="sidenav" id="sidenav">
+          <ul class="sidenav-menu">
+            <li class="sidenav-item">
+              <a href="dashboard.html" class="sidenav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="transactions.html" class="sidenav-link">
+                <i class="fas fa-exchange-alt"></i>
+                Transactions
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="insights.html" class="sidenav-link">
+                <i class="fas fa-chart-bar"></i>
+                Insights
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="budgeting.html" class="sidenav-link">
+                <i class="fas fa-bullseye"></i>
+                Budgeting
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="profile.html" class="sidenav-link active">
+                <i class="fas fa-user"></i>
+                Profile
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="profile-main">
+          <div class="profile-header">
+            <h2>Your Profile</h2>
+          </div>
+
+          <div class="profile-grid">
+            <!-- Profile Information Card -->
+            <div class="profile-card">
+              <div class="profile-card-header">
+                <h3 class="profile-card-title">Personal Information</h3>
+                <p class="profile-card-subtitle">
+                  Manage your profile information
+                </p>
               </div>
-              <ul class="profile-menu-items">
-                <li class="profile-menu-item">
-                  <a href="dashboard.html" class="profile-menu-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                  </a>
+              <form id="profile-form">
+                <div class="profile-form-group">
+                  <label for="profile-name-input">Full Name</label>
+                  <input
+                    type="text"
+                    id="profile-name-input"
+                    class="profile-input"
+                    placeholder="Enter your name"
+                    required
+                  />
+                </div>
+                <div class="profile-form-group">
+                  <label for="profile-income">Monthly Income(₹)</label>
+                  <div class="income-input-container">
+                    <input
+                      type="number"
+                      id="profile-income"
+                      class="income-input"
+                      min="0"
+                      placeholder="Enter your income"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+                <div class="profile-form-group">
+                  <label for="income-type">Income Type</label>
+                  <select id="income-type">
+                    <option value="monthly">Monthly</option>
+                    <option value="one-time">One-time</option>
+                  </select>
+                </div>
+                <button
+                  type="submit"
+                  id="save-profile-btn"
+                  class="profile-save-btn"
+                >
+                  Save Changes
+                </button>
+              </form>
+            </div>
+
+            <!-- Analytics Section -->
+            <div class="profile-analytics">
+              <h3 class="analytics-title">Financial Analytics</h3>
+              <div class="analytics-grid">
+                <div class="analytics-card">
+                  <h4 class="analytics-label">Month-on-Month Change</h4>
+                  <div class="analytics-value" id="month-change-value">0%</div>
+                </div>
+                <div class="analytics-card">
+                  <h4 class="analytics-label">Savings Trend</h4>
+                  <div class="analytics-value" id="savings-trend-value">0%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Top Spending Categories -->
+            <div class="top-categories">
+              <h3 class="top-categories-title">Top Spending Categories</h3>
+              <ul class="category-list" id="top-categories-list">
+                <!-- Categories will be populated via JavaScript -->
+                <li class="empty-analytics">
+                  <p>No expense data available yet</p>
                 </li>
-                <li class="profile-menu-item">
-                  <a href="profile.html" class="profile-menu-link">
-                    <i class="fas fa-user"></i>
-                    Profile
-                  </a>
-                </li>
-                <li class="profile-menu-divider"></li>
-                <li class="profile-menu-item">
-                  <a href="#" id="logout-btn" class="profile-menu-link logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                  </a>
+              </ul>
+            </div>
+
+            <!-- Budget Alerts -->
+            <div class="budget-alerts">
+              <h3 class="budget-alerts-title">Budget Breach Alerts</h3>
+              <ul class="alerts-list" id="budget-alerts-list">
+                <!-- Alerts will be populated via JavaScript -->
+                <li class="empty-analytics">
+                  <p>No budget breaches this month</p>
                 </li>
               </ul>
             </div>
           </div>
-        </div>
+        </main>
       </div>
-    </header>
-
-    <div class="profile-content">
-      <!-- Side Navigation -->
-      <nav class="sidenav" id="sidenav">
-        <ul class="sidenav-menu">
-          <li class="sidenav-item">
-            <a href="dashboard.html" class="sidenav-link">
-              <i class="fas fa-tachometer-alt"></i>
-              Dashboard
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="transactions.html" class="sidenav-link">
-              <i class="fas fa-exchange-alt"></i>
-              Transactions
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="insights.html" class="sidenav-link">
-              <i class="fas fa-chart-bar"></i>
-              Insights
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="budgeting.html" class="sidenav-link">
-              <i class="fas fa-bullseye"></i>
-              Budgeting
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="profile.html" class="sidenav-link active">
-              <i class="fas fa-user"></i>
-              Profile
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <!-- Main Content -->
-      <main class="profile-main">
-        <div class="profile-header">
-          <h2>Your Profile</h2>
-        </div>
-
-        <div class="profile-grid">
-          <!-- Profile Information Card -->
-          <div class="profile-card">
-            <div class="profile-card-header">
-              <h3 class="profile-card-title">Personal Information</h3>
-              <p class="profile-card-subtitle">Manage your profile information</p>
-            </div>
-            <form id="profile-form">
-              <div class="profile-form-group">
-                <label for="profile-name">Full Name</label>
-                <input type="text" id="profile-name" placeholder="Enter your name" required>
-              </div>
-              <div class="profile-form-group">
-                <label for="profile-income">Monthly Income</label>
-                <div class="income-input-container">
-                  <span class="currency-symbol">₹</span>
-                  <input type="number" id="profile-income" class="income-input" min="0" placeholder="Enter your income" step="0.01">
-                </div>
-              </div>
-              <div class="profile-form-group">
-                <label for="income-type">Income Type</label>
-                <select id="income-type">
-                  <option value="monthly">Monthly</option>
-                  <option value="one-time">One-time</option>
-                </select>
-              </div>
-              <button type="submit" id="save-profile-btn" class="profile-save-btn">Save Changes</button>
-            </form>
-          </div>
-
-          <!-- Analytics Section -->
-          <div class="profile-analytics">
-            <h3 class="analytics-title">Financial Analytics</h3>
-            <div class="analytics-grid">
-              <div class="analytics-card">
-                <h4 class="analytics-label">Month-on-Month Change</h4>
-                <div class="analytics-value" id="month-change-value">0%</div>
-              </div>
-              <div class="analytics-card">
-                <h4 class="analytics-label">Savings Trend</h4>
-                <div class="analytics-value" id="savings-trend-value">0%</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Top Spending Categories -->
-          <div class="top-categories">
-            <h3 class="top-categories-title">Top Spending Categories</h3>
-            <ul class="category-list" id="top-categories-list">
-              <!-- Categories will be populated via JavaScript -->
-              <li class="empty-analytics">
-                <p>No expense data available yet</p>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Budget Alerts -->
-          <div class="budget-alerts">
-            <h3 class="budget-alerts-title">Budget Breach Alerts</h3>
-            <ul class="alerts-list" id="budget-alerts-list">
-              <!-- Alerts will be populated via JavaScript -->
-              <li class="empty-analytics">
-                <p>No budget breaches this month</p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </main>
     </div>
-  </div>
 
-  <!-- Loading Spinner -->
-  <div class="loading-spinner" id="loading-spinner" style="display: none;">
-    <div class="spinner"></div>
-  </div>
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loading-spinner" style="display: none">
+      <div class="spinner"></div>
+    </div>
 
-  <!-- Toast Container -->
-  <div class="toast-container"></div>
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
 
-  <!-- Load Firebase Config and Utils -->
-  <script src="../js/firebase-config.js"></script>
-  <script src="../js/utils.js"></script>
-  
-  <!-- Profile Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // DOM Elements
-      const profileForm = document.getElementById('profile-form');
-      const nameInput = document.getElementById('profile-name');
-      const incomeInput = document.getElementById('profile-income');
-      const incomeTypeSelect = document.getElementById('income-type');
-      const topCategoriesList = document.getElementById('top-categories-list');
-      const monthChangeValue = document.getElementById('month-change-value');
-      const savingsTrendValue = document.getElementById('savings-trend-value');
-      const budgetAlertsList = document.getElementById('budget-alerts-list');
-      
-      // Initialize sidebar and profile dropdown
-      initializeSidebar();
-      initializeProfileDropdown();
-      
-      // Current user data
-      let currentUser = null;
-      
-      // Check if user is logged in
-      firebase.auth().onAuthStateChanged(async function(user) {
-        if (user) {
-          // User is logged in
-          currentUser = user;
-          
-          // Load profile data
-          await loadProfileData();
-          
-          // Load analytics data
-          await loadAnalyticsData();
-        } else {
-          // User is not logged in, redirect to login page
-          window.location.href = 'login.html';
-        }
-      });
-      
-      // Load profile data
-      async function loadProfileData() {
-        if (!currentUser) return;
-        
-        showLoading(true);
-        
-        try {
-          // Get user document
-          const userDoc = await firebase.firestore().collection('users').doc(currentUser.uid).get();
-          
-          if (userDoc.exists) {
-            const userData = userDoc.data();
-            
-            // Fill profile form
-            if (nameInput) nameInput.value = userData.name || '';
-          }
-          
-          // Get meta document for income information
-          const metaDoc = await firebase.firestore().collection('users').doc(currentUser.uid).collection('meta').doc('profile').get();
-          
-          if (metaDoc.exists) {
-            const metaData = metaDoc.data();
-            
-            if (metaData.income) {
-              if (incomeInput) incomeInput.value = metaData.income.amount || 0;
-              if (incomeTypeSelect) incomeTypeSelect.value = metaData.income.type || 'monthly';
-            }
+    <!-- Load Firebase Config and Utils -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/utils.js"></script>
+
+    <!-- Profile Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // DOM Elements
+        const profileForm = document.getElementById("profile-form");
+        const nameInput = document.getElementById("profile-name-input");
+        const incomeInput = document.getElementById("profile-income");
+        const incomeTypeSelect = document.getElementById("income-type");
+        const topCategoriesList = document.getElementById(
+          "top-categories-list"
+        );
+        const monthChangeValue = document.getElementById("month-change-value");
+        const savingsTrendValue = document.getElementById(
+          "savings-trend-value"
+        );
+        const budgetAlertsList = document.getElementById("budget-alerts-list");
+
+        // Initialize sidebar and profile dropdown
+        initializeSidebar();
+        initializeProfileDropdown();
+
+        // Current user data
+        let currentUser = null;
+
+        // Check if user is logged in
+        firebase.auth().onAuthStateChanged(async function (user) {
+          if (user) {
+            // User is logged in
+            currentUser = user;
+
+            // Load profile data
+            await loadProfileData();
+
+            // Load analytics data
+            await loadAnalyticsData();
           } else {
-            // Create meta document if it doesn't exist
-            await firebase.firestore().collection('users').doc(currentUser.uid).collection('meta').doc('profile').set({
-              income: {
-                amount: 0,
-                type: 'monthly',
-                currency: 'INR'
-              },
-              budgets: {}
-            });
+            // User is not logged in, redirect to login page
+            window.location.href = "login.html";
           }
-          
-          showLoading(false);
-        } catch (error) {
-          console.error('Error loading profile data:', error);
-          showToast('Error loading profile data. Please try again.', 'error');
-          showLoading(false);
-        }
-      }
-      
-      // Load analytics data
-      async function loadAnalyticsData() {
-        if (!currentUser) return;
-        
-        showLoading(true);
-        
-        try {
-          // Get transactions
-          const transactionsRef = firebase.firestore().collection('users').doc(currentUser.uid).collection('transactions');
-          const transactionsSnapshot = await transactionsRef.orderBy('date', 'desc').get();
-          
-          const transactions = [];
-          
-          transactionsSnapshot.forEach(doc => {
-            transactions.push({
-              id: doc.id,
-              ...doc.data()
-            });
-          });
-          
-          // Load top spending categories
-          loadTopSpendingCategories(transactions);
-          
-          // Load month-on-month change
-          loadMonthOnMonthChange(transactions);
-          
-          // Load savings trend
-          loadSavingsTrend(transactions);
-          
-          // Load budget breach alerts
-          loadBudgetAlerts(transactions);
-          
-          showLoading(false);
-        } catch (error) {
-          console.error('Error loading analytics data:', error);
-          showToast('Error loading analytics data. Please try again.', 'error');
-          showLoading(false);
-        }
-      }
-      
-      // Update profile form submission
-      if (profileForm) {
-        profileForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          
+        });
+
+        // Load profile data
+        async function loadProfileData() {
           if (!currentUser) return;
-          
+
           showLoading(true);
-          
+
           try {
-            // Get form values
-            const name = nameInput.value.trim();
-            const income = parseFloat(incomeInput.value) || 0;
-            const incomeType = incomeTypeSelect.value;
-            
-            // Validate form
-            if (!name) {
-              showToast('Please enter your name', 'error');
-              showLoading(false);
-              return;
+            // Get user document
+            const userDoc = await firebase
+              .firestore()
+              .collection("users")
+              .doc(currentUser.uid)
+              .get();
+
+            if (userDoc.exists) {
+              const userData = userDoc.data();
+
+              // Fill profile form
+              if (nameInput) nameInput.value = userData.name || "";
             }
-            
-            // Update user document
-            await firebase.firestore().collection('users').doc(currentUser.uid).update({
-              name: name
-            });
-            
-            // Update meta document
-            await firebase.firestore().collection('users').doc(currentUser.uid).collection('meta').doc('profile').update({
-              'income.amount': income,
-              'income.type': incomeType,
-              'income.currency': 'INR'
-            });
-            
-            // Show success message
-            showToast('Profile updated successfully', 'success');
-            
-            // Update profile dropdown
-            document.getElementById('profile-name').textContent = name;
-            
+
+            // Get meta document for income information
+            const metaDoc = await firebase
+              .firestore()
+              .collection("users")
+              .doc(currentUser.uid)
+              .collection("meta")
+              .doc("profile")
+              .get();
+
+            if (metaDoc.exists) {
+              const metaData = metaDoc.data();
+
+              if (metaData.income) {
+                if (incomeInput)
+                  incomeInput.value = metaData.income.amount || 0;
+                if (incomeTypeSelect)
+                  incomeTypeSelect.value = metaData.income.type || "monthly";
+              }
+            } else {
+              // Create meta document if it doesn't exist
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(currentUser.uid)
+                .collection("meta")
+                .doc("profile")
+                .set({
+                  income: {
+                    amount: 0,
+                    type: "monthly",
+                    currency: "INR",
+                  },
+                  budgets: {},
+                });
+            }
+
             showLoading(false);
           } catch (error) {
-            console.error('Error updating profile:', error);
-            showToast('Error updating profile. Please try again.', 'error');
+            console.error("Error loading profile data:", error);
+            showToast("Error loading profile data. Please try again.", "error");
             showLoading(false);
           }
-        });
-      }
-      
-      // Load top spending categories
-      function loadTopSpendingCategories(transactions) {
-        if (!topCategoriesList) return;
-        
-        // Clear existing categories
-        topCategoriesList.innerHTML = '';
-        
-        // Filter expenses only
-        const expenses = transactions.filter(transaction => transaction.type === 'expense');
-        
-        // Group by category
-        const categoryTotals = {};
-        
-        expenses.forEach(expense => {
-          if (!categoryTotals[expense.category]) {
-            categoryTotals[expense.category] = 0;
+        }
+
+        // Load analytics data
+        async function loadAnalyticsData() {
+          if (!currentUser) return;
+
+          showLoading(true);
+
+          try {
+            // Get transactions
+            const transactionsRef = firebase
+              .firestore()
+              .collection("users")
+              .doc(currentUser.uid)
+              .collection("transactions");
+            const transactionsSnapshot = await transactionsRef
+              .orderBy("date", "desc")
+              .get();
+
+            const transactions = [];
+
+            transactionsSnapshot.forEach((doc) => {
+              transactions.push({
+                id: doc.id,
+                ...doc.data(),
+              });
+            });
+
+            // Load top spending categories
+            loadTopSpendingCategories(transactions);
+
+            // Load month-on-month change
+            loadMonthOnMonthChange(transactions);
+
+            // Load savings trend
+            loadSavingsTrend(transactions);
+
+            // Load budget breach alerts
+            loadBudgetAlerts(transactions);
+
+            showLoading(false);
+          } catch (error) {
+            console.error("Error loading analytics data:", error);
+            showToast(
+              "Error loading analytics data. Please try again.",
+              "error"
+            );
+            showLoading(false);
           }
-          categoryTotals[expense.category] += parseFloat(expense.amount);
-        });
-        
-        // Sort categories by amount
-        const sortedCategories = Object.entries(categoryTotals)
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 3); // Get top 3
-        
-        if (sortedCategories.length === 0) {
-          const emptyItem = document.createElement('li');
-          emptyItem.className = 'empty-analytics';
-          emptyItem.innerHTML = `
+        }
+
+        // Update profile form submission
+        if (profileForm) {
+          profileForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            if (!currentUser) return;
+
+            showLoading(true);
+
+            try {
+              // Get form values
+              const name = nameInput.value.trim();
+              const income = parseFloat(incomeInput.value) || 0;
+              const incomeType = incomeTypeSelect.value;
+
+              // Validate form
+              if (!name) {
+                showToast("Please enter your name", "error");
+                showLoading(false);
+                return;
+              }
+
+              // Update user document (use set with merge to auto-create if missing)
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(currentUser.uid)
+                .set(
+                  {
+                    name: name,
+                    email: currentUser.email,
+                  },
+                  { merge: true }
+                );
+
+              // Update meta document
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(currentUser.uid)
+                .collection("meta")
+                .doc("profile")
+                .set(
+                  {
+                    income: {
+                      amount: income,
+                      type: incomeType,
+                      currency: "INR",
+                    },
+                  },
+                  { merge: true }
+                );
+
+              // Show success message
+              showToast("Profile updated successfully", "success");
+
+              // Update profile dropdown
+              document.getElementById("profile-name").textContent = name;
+
+              showLoading(false);
+            } catch (error) {
+              console.error("Error updating profile:", error);
+              showToast("Error updating profile. Please try again.", "error");
+              showLoading(false);
+            }
+          });
+        }
+
+        // Load top spending categories
+        function loadTopSpendingCategories(transactions) {
+          if (!topCategoriesList) return;
+
+          // Clear existing categories
+          topCategoriesList.innerHTML = "";
+
+          // Filter expenses only
+          const expenses = transactions.filter(
+            (transaction) => transaction.type === "expense"
+          );
+
+          // Group by category
+          const categoryTotals = {};
+
+          expenses.forEach((expense) => {
+            if (!categoryTotals[expense.category]) {
+              categoryTotals[expense.category] = 0;
+            }
+            categoryTotals[expense.category] += parseFloat(expense.amount);
+          });
+
+          // Sort categories by amount
+          const sortedCategories = Object.entries(categoryTotals)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 3); // Get top 3
+
+          if (sortedCategories.length === 0) {
+            const emptyItem = document.createElement("li");
+            emptyItem.className = "empty-analytics";
+            emptyItem.innerHTML = `
             <p>No expense data available yet</p>
           `;
-          topCategoriesList.appendChild(emptyItem);
-          return;
-        }
-        
-        // Create category items
-        sortedCategories.forEach(([category, amount]) => {
-          const li = document.createElement('li');
-          li.className = 'category-item';
-          
-          li.innerHTML = `
+            topCategoriesList.appendChild(emptyItem);
+            return;
+          }
+
+          // Create category items
+          sortedCategories.forEach(([category, amount]) => {
+            const li = document.createElement("li");
+            li.className = "category-item";
+
+            li.innerHTML = `
             <div class="category-info">
               <div class="category-icon">
                 <i class="${getCategoryIcon(category)}"></i>
@@ -416,209 +502,263 @@
             </div>
             <span class="category-amount">${formatCurrency(amount)}</span>
           `;
-          
-          topCategoriesList.appendChild(li);
-        });
-      }
-      
-      // Load month-on-month change
-      function loadMonthOnMonthChange(transactions) {
-        if (!monthChangeValue) return;
-        
-        // Group transactions by month
-        const monthlyTotals = {};
-        
-        transactions.forEach(transaction => {
-          const date = new Date(transaction.date);
-          const month = date.toLocaleString('default', { month: 'short', year: 'numeric' });
-          
-          if (!monthlyTotals[month]) {
-            monthlyTotals[month] = {
-              income: 0,
-              expense: 0
-            };
-          }
-          
-          if (transaction.type === 'income') {
-            monthlyTotals[month].income += parseFloat(transaction.amount);
-          } else if (transaction.type === 'expense') {
-            monthlyTotals[month].expense += parseFloat(transaction.amount);
-          }
-        });
-        
-        // Sort months chronologically
-        const sortedMonths = Object.keys(monthlyTotals).sort((a, b) => {
-          const dateA = new Date(a);
-          const dateB = new Date(b);
-          return dateB - dateA; // Descending order
-        });
-        
-        // Calculate month-on-month change
-        if (sortedMonths.length >= 2) {
-          const currentMonth = sortedMonths[0];
-          const previousMonth = sortedMonths[1];
-          
-          const currentExpense = monthlyTotals[currentMonth].expense;
-          const previousExpense = monthlyTotals[previousMonth].expense;
-          
-          if (previousExpense > 0) {
-            const changePercentage = ((currentExpense - previousExpense) / previousExpense) * 100;
-            
-            let changeClass = 'neutral';
-            if (changePercentage > 0) {
-              changeClass = 'negative'; // Spending more is negative
-            } else if (changePercentage < 0) {
-              changeClass = 'positive'; // Spending less is positive
+
+            topCategoriesList.appendChild(li);
+          });
+        }
+
+        // Load month-on-month change
+        function loadMonthOnMonthChange(transactions) {
+          if (!monthChangeValue) return;
+
+          // Group transactions by month
+          const monthlyTotals = {};
+
+          transactions.forEach((transaction) => {
+            const date = new Date(transaction.date);
+            const month = date.toLocaleString("default", {
+              month: "short",
+              year: "numeric",
+            });
+
+            if (!monthlyTotals[month]) {
+              monthlyTotals[month] = {
+                income: 0,
+                expense: 0,
+              };
             }
-            
-            monthChangeValue.textContent = `${Math.abs(changePercentage).toFixed(1)}%`;
-            monthChangeValue.className = `analytics-value ${changeClass}`;
-            
-            const indicator = document.createElement('i');
-            indicator.className = changePercentage > 0 ? 'fas fa-arrow-up' : 'fas fa-arrow-down';
-            indicator.style.marginLeft = '5px';
-            monthChangeValue.appendChild(indicator);
+
+            if (transaction.type === "income") {
+              monthlyTotals[month].income += parseFloat(transaction.amount);
+            } else if (transaction.type === "expense") {
+              monthlyTotals[month].expense += parseFloat(transaction.amount);
+            }
+          });
+
+          // Sort months chronologically
+          const sortedMonths = Object.keys(monthlyTotals).sort((a, b) => {
+            const dateA = new Date(a);
+            const dateB = new Date(b);
+            return dateB - dateA; // Descending order
+          });
+
+          // Calculate month-on-month change
+          if (sortedMonths.length >= 2) {
+            const currentMonth = sortedMonths[0];
+            const previousMonth = sortedMonths[1];
+
+            const currentExpense = monthlyTotals[currentMonth].expense;
+            const previousExpense = monthlyTotals[previousMonth].expense;
+
+            if (previousExpense > 0) {
+              const changePercentage =
+                ((currentExpense - previousExpense) / previousExpense) * 100;
+
+              let changeClass = "neutral";
+              if (changePercentage > 0) {
+                changeClass = "negative"; // Spending more is negative
+              } else if (changePercentage < 0) {
+                changeClass = "positive"; // Spending less is positive
+              }
+
+              monthChangeValue.textContent = `${Math.abs(
+                changePercentage
+              ).toFixed(1)}%`;
+              monthChangeValue.className = `analytics-value ${changeClass}`;
+
+              const indicator = document.createElement("i");
+              indicator.className =
+                changePercentage > 0 ? "fas fa-arrow-up" : "fas fa-arrow-down";
+              indicator.style.marginLeft = "5px";
+              monthChangeValue.appendChild(indicator);
+            } else {
+              monthChangeValue.textContent = "N/A";
+              monthChangeValue.className = "analytics-value neutral";
+            }
           } else {
-            monthChangeValue.textContent = 'N/A';
-            monthChangeValue.className = 'analytics-value neutral';
+            monthChangeValue.textContent = "N/A";
+            monthChangeValue.className = "analytics-value neutral";
           }
-        } else {
-          monthChangeValue.textContent = 'N/A';
-          monthChangeValue.className = 'analytics-value neutral';
         }
-      }
-      
-      // Load savings trend
-      function loadSavingsTrend(transactions) {
-        if (!savingsTrendValue) return;
-        
-        // Group transactions by month
-        const monthlyTotals = {};
-        
-        transactions.forEach(transaction => {
-          const date = new Date(transaction.date);
-          const month = date.toLocaleString('default', { month: 'short', year: 'numeric' });
-          
-          if (!monthlyTotals[month]) {
-            monthlyTotals[month] = {
-              income: 0,
-              expense: 0
-            };
+
+        // Load savings trend
+        function loadSavingsTrend(transactions) {
+          if (!savingsTrendValue) return;
+
+          // Fetch profile income and income type from the DOM/meta (sync with loadProfileData)
+          let profileMonthlyIncome = 0;
+          let incomeType = "monthly";
+          if (
+            typeof incomeInput !== "undefined" &&
+            incomeInput &&
+            !isNaN(parseFloat(incomeInput.value))
+          ) {
+            profileMonthlyIncome = parseFloat(incomeInput.value);
           }
-          
-          if (transaction.type === 'income') {
-            monthlyTotals[month].income += parseFloat(transaction.amount);
-          } else if (transaction.type === 'expense') {
-            monthlyTotals[month].expense += parseFloat(transaction.amount);
+          if (typeof incomeTypeSelect !== "undefined" && incomeTypeSelect) {
+            incomeType = incomeTypeSelect.value;
           }
-        });
-        
-        // Sort months chronologically
-        const sortedMonths = Object.keys(monthlyTotals).sort((a, b) => {
-          const dateA = new Date(a);
-          const dateB = new Date(b);
-          return dateA - dateB;
-        });
-        
-        // Calculate monthly savings rate
-        const savingsRates = [];
-        
-        sortedMonths.forEach(month => {
-          const income = monthlyTotals[month].income;
-          const expense = monthlyTotals[month].expense;
-          
-          if (income > 0) {
-            const savingsRate = ((income - expense) / income) * 100;
-            savingsRates.push(savingsRate);
-          }
-        });
-        
-        // Calculate average savings rate
-        if (savingsRates.length > 0) {
-          const averageSavingsRate = savingsRates.reduce((acc, rate) => acc + rate, 0) / savingsRates.length;
-          
-          let trendClass = 'neutral';
-          if (averageSavingsRate > 20) {
-            trendClass = 'positive';
-          } else if (averageSavingsRate < 0) {
-            trendClass = 'negative';
-          }
-          
-          savingsTrendValue.textContent = `${averageSavingsRate.toFixed(1)}%`;
-          savingsTrendValue.className = `analytics-value ${trendClass}`;
-        } else {
-          savingsTrendValue.textContent = 'N/A';
-          savingsTrendValue.className = 'analytics-value neutral';
-        }
-      }
-      
-      // Load budget alerts
-      async function loadBudgetAlerts(transactions) {
-        if (!budgetAlertsList) return;
-        
-        // Clear existing alerts
-        budgetAlertsList.innerHTML = '';
-        
-        try {
-          // Get budget settings
-          const metaDoc = await firebase.firestore().collection('users').doc(currentUser.uid).collection('meta').doc('profile').get();
-          
-          if (!metaDoc.exists) {
-            const emptyItem = document.createElement('li');
-            emptyItem.className = 'empty-analytics';
-            emptyItem.innerHTML = `
-              <p>No budgets set yet</p>
-            `;
-            budgetAlertsList.appendChild(emptyItem);
-            return;
-          }
-          
-          const metaData = metaDoc.data();
-          const budgets = metaData.budgets || {};
-          
-          // Check if budgets are set
-          if (Object.keys(budgets).length === 0) {
-            const emptyItem = document.createElement('li');
-            emptyItem.className = 'empty-analytics';
-            emptyItem.innerHTML = `
-              <p>No budgets set yet</p>
-            `;
-            budgetAlertsList.appendChild(emptyItem);
-            return;
-          }
-          
-          // Get current month expenses
-          const currentDate = new Date();
-          const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-          
-          const currentMonthExpenses = transactions.filter(transaction => {
-            const transactionDate = new Date(transaction.date);
-            return transaction.type === 'expense' && transactionDate >= startOfMonth;
-          });
-          
-          // Group expenses by category
-          const categoryTotals = {};
-          
-          currentMonthExpenses.forEach(expense => {
-            if (!categoryTotals[expense.category]) {
-              categoryTotals[expense.category] = 0;
+
+          // Group transactions by month
+          const monthlyTotals = {};
+          transactions.forEach((transaction) => {
+            const date = new Date(transaction.date);
+            const month = date.toLocaleString("default", {
+              month: "short",
+              year: "numeric",
+            });
+            if (!monthlyTotals[month]) {
+              monthlyTotals[month] = {
+                income: 0,
+                expense: 0,
+                hasIncomeTxn: false,
+              };
             }
-            categoryTotals[expense.category] += parseFloat(expense.amount);
+            if (transaction.type === "income") {
+              monthlyTotals[month].income += parseFloat(transaction.amount);
+              monthlyTotals[month].hasIncomeTxn = true;
+            } else if (transaction.type === "expense") {
+              monthlyTotals[month].expense += parseFloat(transaction.amount);
+            }
           });
-          
-          // Check for budget breaches
-          let alertsFound = false;
-          
-          Object.entries(budgets).forEach(([category, budget]) => {
-            const spent = categoryTotals[category] || 0;
-            
-            if (spent > budget) {
-              // Create alert item
-              alertsFound = true;
-              const li = document.createElement('li');
-              li.className = 'alert-item';
-              
-              li.innerHTML = `
+
+          // Sort months chronologically
+          const sortedMonths = Object.keys(monthlyTotals).sort((a, b) => {
+            const dateA = new Date(a);
+            const dateB = new Date(b);
+            return dateA - dateB;
+          });
+
+          // Calculate monthly savings rate
+          const savingsRates = [];
+          let firstMonth = sortedMonths[0];
+          sortedMonths.forEach((month, idx) => {
+            let income = monthlyTotals[month].income;
+            const expense = monthlyTotals[month].expense;
+            const hasIncomeTxn = monthlyTotals[month].hasIncomeTxn;
+            if (incomeType === "monthly") {
+              // Always add profile monthly income to each month
+              income += profileMonthlyIncome;
+            } else if (incomeType === "one-time") {
+              // Add profile monthly income ONLY to the first month
+              if (month === firstMonth) {
+                income += profileMonthlyIncome;
+              }
+            }
+            // Only calculate for months that have any transaction (income or expense)
+            if (income > 0 || expense > 0) {
+              // If income is zero, savings rate will be negative if there are expenses
+              if (income > 0) {
+                const savingsRate = ((income - expense) / income) * 100;
+                savingsRates.push(savingsRate);
+              } else if (expense > 0) {
+                // No income, only expense
+                savingsRates.push(-100);
+              }
+            }
+          });
+
+          // Calculate average savings rate
+          if (savingsRates.length > 0) {
+            const averageSavingsRate =
+              savingsRates.reduce((acc, rate) => acc + rate, 0) /
+              savingsRates.length;
+
+            let trendClass = "neutral";
+            if (averageSavingsRate > 20) {
+              trendClass = "positive";
+            } else if (averageSavingsRate < 0) {
+              trendClass = "negative";
+            }
+
+            savingsTrendValue.textContent = `${averageSavingsRate.toFixed(1)}%`;
+            savingsTrendValue.className = `analytics-value ${trendClass}`;
+          } else {
+            savingsTrendValue.textContent = "N/A";
+            savingsTrendValue.className = "analytics-value neutral";
+          }
+        }
+
+        // Load budget alerts
+        async function loadBudgetAlerts(transactions) {
+          if (!budgetAlertsList) return;
+
+          // Clear existing alerts
+          budgetAlertsList.innerHTML = "";
+
+          try {
+            // Get budget settings
+            const metaDoc = await firebase
+              .firestore()
+              .collection("users")
+              .doc(currentUser.uid)
+              .collection("meta")
+              .doc("profile")
+              .get();
+
+            if (!metaDoc.exists) {
+              const emptyItem = document.createElement("li");
+              emptyItem.className = "empty-analytics";
+              emptyItem.innerHTML = `
+              <p>No budgets set yet</p>
+            `;
+              budgetAlertsList.appendChild(emptyItem);
+              return;
+            }
+
+            const metaData = metaDoc.data();
+            const budgets = metaData.budgets || {};
+
+            // Check if budgets are set
+            if (Object.keys(budgets).length === 0) {
+              const emptyItem = document.createElement("li");
+              emptyItem.className = "empty-analytics";
+              emptyItem.innerHTML = `
+              <p>No budgets set yet</p>
+            `;
+              budgetAlertsList.appendChild(emptyItem);
+              return;
+            }
+
+            // Get current month expenses
+            const currentDate = new Date();
+            const startOfMonth = new Date(
+              currentDate.getFullYear(),
+              currentDate.getMonth(),
+              1
+            );
+
+            const currentMonthExpenses = transactions.filter((transaction) => {
+              const transactionDate = new Date(transaction.date);
+              return (
+                transaction.type === "expense" &&
+                transactionDate >= startOfMonth
+              );
+            });
+
+            // Group expenses by category
+            const categoryTotals = {};
+
+            currentMonthExpenses.forEach((expense) => {
+              if (!categoryTotals[expense.category]) {
+                categoryTotals[expense.category] = 0;
+              }
+              categoryTotals[expense.category] += parseFloat(expense.amount);
+            });
+
+            // Check for budget breaches
+            let alertsFound = false;
+
+            Object.entries(budgets).forEach(([category, budget]) => {
+              const spent = categoryTotals[category] || 0;
+
+              if (spent > budget) {
+                // Create alert item
+                alertsFound = true;
+                const li = document.createElement("li");
+                li.className = "alert-item";
+
+                li.innerHTML = `
                 <div class="alert-info">
                   <i class="alert-icon fas fa-exclamation-triangle"></i>
                   <span class="alert-category">${category}</span>
@@ -627,32 +767,32 @@
                   ${formatCurrency(spent)} / ${formatCurrency(budget)}
                 </span>
               `;
-              
-              budgetAlertsList.appendChild(li);
-            }
-          });
-          
-          // Show empty state if no alerts
-          if (!alertsFound) {
-            const emptyItem = document.createElement('li');
-            emptyItem.className = 'empty-analytics';
-            emptyItem.innerHTML = `
+
+                budgetAlertsList.appendChild(li);
+              }
+            });
+
+            // Show empty state if no alerts
+            if (!alertsFound) {
+              const emptyItem = document.createElement("li");
+              emptyItem.className = "empty-analytics";
+              emptyItem.innerHTML = `
               <p>No budget breaches this month</p>
             `;
-            budgetAlertsList.appendChild(emptyItem);
-          }
-        } catch (error) {
-          console.error('Error loading budget alerts:', error);
-          
-          const emptyItem = document.createElement('li');
-          emptyItem.className = 'empty-analytics';
-          emptyItem.innerHTML = `
+              budgetAlertsList.appendChild(emptyItem);
+            }
+          } catch (error) {
+            console.error("Error loading budget alerts:", error);
+
+            const emptyItem = document.createElement("li");
+            emptyItem.className = "empty-analytics";
+            emptyItem.innerHTML = `
             <p>Error loading budget alerts</p>
           `;
-          budgetAlertsList.appendChild(emptyItem);
+            budgetAlertsList.appendChild(emptyItem);
+          }
         }
-      }
-    });
-  </script>
-</body>
+      });
+    </script>
+  </body>
 </html>

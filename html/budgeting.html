@@ -1,436 +1,534 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Budgeting - FinMate</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-  <link rel="stylesheet" href="../css/global.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/budgeting.css">
-  
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-</head>
-<body>
-  <div class="budgeting-container">
-    <!-- Header -->
-    <header class="header">
-      <div class="header-container">
-        <div class="header-left">
-          <button id="navbar-toggle" class="navbar-toggle">
-            <i class="fas fa-bars"></i>
-          </button>
-          <div class="logo">
-            <img src="../assets/images/logo.svg" alt="FinMate Logo">
-            <span class="logo-text">FinMate</span>
-          </div>
-        </div>
-        <div class="header-right">
-          <div class="profile-dropdown">
-            <button id="profile-toggle" class="profile-toggle">
-              <i class="fas fa-user"></i>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Budgeting - FinMate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/budgeting.css" />
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  </head>
+  <body>
+    <div class="budgeting-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-container">
+          <div class="header-left">
+            <button id="navbar-toggle" class="navbar-toggle">
+              <i class="fas fa-bars"></i>
             </button>
-            <div class="profile-menu" id="profile-menu">
-              <div class="profile-menu-header">
-                <div class="profile-menu-name" id="profile-name">User Name</div>
-                <div class="profile-menu-email" id="profile-email">user@example.com</div>
-              </div>
-              <ul class="profile-menu-items">
-                <li class="profile-menu-item">
-                  <a href="dashboard.html" class="profile-menu-link">
-                    <i class="fas fa-tachometer-alt"></i>
-                    Dashboard
-                  </a>
-                </li>
-                <li class="profile-menu-item">
-                  <a href="profile.html" class="profile-menu-link">
-                    <i class="fas fa-user"></i>
-                    Profile
-                  </a>
-                </li>
-                <li class="profile-menu-divider"></li>
-                <li class="profile-menu-item">
-                  <a href="#" id="logout-btn" class="profile-menu-link logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
-                  </a>
-                </li>
-              </ul>
+            <div class="logo">
+              <img src="../assets/images/logo.svg" alt="FinMate Logo" />
+              <span class="logo-text">FinMate</span>
             </div>
           </div>
+          <div class="header-right">
+            <div class="profile-dropdown">
+              <button id="profile-toggle" class="profile-toggle">
+                <i class="fas fa-user"></i>
+              </button>
+              <div class="profile-menu" id="profile-menu">
+                <div class="profile-menu-header">
+                  <div class="profile-menu-name" id="profile-name">
+                    User Name
+                  </div>
+                  <div class="profile-menu-email" id="profile-email">
+                    user@example.com
+                  </div>
+                </div>
+                <ul class="profile-menu-items">
+                  <li class="profile-menu-item">
+                    <a href="dashboard.html" class="profile-menu-link">
+                      <i class="fas fa-tachometer-alt"></i>
+                      Dashboard
+                    </a>
+                  </li>
+                  <li class="profile-menu-item">
+                    <a href="profile.html" class="profile-menu-link">
+                      <i class="fas fa-user"></i>
+                      Profile
+                    </a>
+                  </li>
+                  <li class="profile-menu-divider"></li>
+                  <li class="profile-menu-item">
+                    <a
+                      href="#"
+                      id="logout-btn"
+                      class="profile-menu-link logout-btn"
+                    >
+                      <i class="fas fa-sign-out-alt"></i>
+                      Logout
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="budgeting-content">
+        <!-- Side Navigation -->
+        <nav class="sidenav" id="sidenav">
+          <ul class="sidenav-menu">
+            <li class="sidenav-item">
+              <a href="dashboard.html" class="sidenav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="transactions.html" class="sidenav-link">
+                <i class="fas fa-exchange-alt"></i>
+                Transactions
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="insights.html" class="sidenav-link">
+                <i class="fas fa-chart-bar"></i>
+                Insights
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="budgeting.html" class="sidenav-link active">
+                <i class="fas fa-bullseye"></i>
+                Budgeting
+              </a>
+            </li>
+            <li class="sidenav-item">
+              <a href="profile.html" class="sidenav-link">
+                <i class="fas fa-user"></i>
+                Profile
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="budgeting-main">
+          <div class="budgeting-header">
+            <h2>Budget Management</h2>
+            <button
+              id="open-budget-modal-btn"
+              class="add-transaction-btn"
+              style="float: right; margin-top: -2.5rem"
+            >
+              <i class="fas fa-plus"></i> Set Budget
+            </button>
+          </div>
+
+          <div class="budgeting-grid">
+            <!-- Budget Overview Section (now takes full space) -->
+            <div
+              class="budget-overview-card"
+              id="budget-overview-card"
+              style="display: none"
+            >
+              <h3 class="budget-overview-title">Budget Overview</h3>
+              <div class="budget-progress" id="budget-progress">
+                <!-- Budget progress bars will be populated via JavaScript -->
+              </div>
+            </div>
+
+            <!-- Empty Budgets State -->
+            <div class="empty-budgets" id="empty-budgets">
+              <i class="fas fa-bullseye"></i>
+              <h3>No Budgets Set</h3>
+              <p>
+                Start by setting a budget for a spending category to track your
+                progress
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- Set Budget Modal -->
+      <div id="budget-modal" class="modal">
+        <div class="modal-content budget-modal-content">
+          <h3 class="budget-set-title">Set Budget Limits</h3>
+          <form id="budget-form">
+            <div class="budget-form-group">
+              <label for="budget-category">Category</label>
+              <select id="budget-category" required>
+                <!-- Categories will be populated via JavaScript -->
+              </select>
+            </div>
+            <div class="budget-form-group">
+              <label for="budget-amount">Budget Amount(₹)</label>
+              <div class="budget-input-container">
+                <input
+                  type="number"
+                  id="budget-amount"
+                  class="budget-input"
+                  min="0"
+                  step="0.01"
+                  placeholder="Enter budget amount"
+                  required
+                />
+              </div>
+            </div>
+            <button type="submit" id="set-budget-btn" class="set-budget-btn">
+              Set Budget
+            </button>
+          </form>
         </div>
       </div>
-    </header>
-
-    <div class="budgeting-content">
-      <!-- Side Navigation -->
-      <nav class="sidenav" id="sidenav">
-        <ul class="sidenav-menu">
-          <li class="sidenav-item">
-            <a href="dashboard.html" class="sidenav-link">
-              <i class="fas fa-tachometer-alt"></i>
-              Dashboard
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="transactions.html" class="sidenav-link">
-              <i class="fas fa-exchange-alt"></i>
-              Transactions
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="insights.html" class="sidenav-link">
-              <i class="fas fa-chart-bar"></i>
-              Insights
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="budgeting.html" class="sidenav-link active">
-              <i class="fas fa-bullseye"></i>
-              Budgeting
-            </a>
-          </li>
-          <li class="sidenav-item">
-            <a href="profile.html" class="sidenav-link">
-              <i class="fas fa-user"></i>
-              Profile
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <!-- Main Content -->
-      <main class="budgeting-main">
-        <div class="budgeting-header">
-          <h2>Budget Management</h2>
-        </div>
-
-        <div class="budgeting-grid">
-          <!-- Budget Set Section -->
-          <div class="budget-set-card">
-            <h3 class="budget-set-title">Set Budget Limits</h3>
-            <form id="budget-form">
-              <div class="budget-form-group">
-                <label for="budget-category">Category</label>
-                <select id="budget-category" required>
-                  <!-- Categories will be populated via JavaScript -->
-                </select>
-              </div>
-              <div class="budget-form-group">
-                <label for="budget-amount">Budget Amount</label>
-                <div class="budget-input-container">
-                  <span class="currency-symbol">₹</span>
-                  <input type="number" id="budget-amount" class="budget-input" min="0" step="0.01" placeholder="Enter budget amount" required>
-                </div>
-              </div>
-              <button type="submit" id="set-budget-btn" class="set-budget-btn">Set Budget</button>
-            </form>
-          </div>
-
-          <!-- Budget Overview Section -->
-          <div class="budget-overview-card" id="budget-overview-card" style="display: none;">
-            <h3 class="budget-overview-title">Budget Overview</h3>
-            <div class="budget-progress" id="budget-progress">
-              <!-- Budget progress bars will be populated via JavaScript -->
-            </div>
-          </div>
-
-          <!-- Empty Budgets State -->
-          <div class="empty-budgets" id="empty-budgets">
-            <i class="fas fa-bullseye"></i>
-            <h3>No Budgets Set</h3>
-            <p>Start by setting a budget for a spending category to track your progress</p>
-          </div>
-        </div>
-      </main>
     </div>
-  </div>
 
-  <!-- Loading Spinner -->
-  <div class="loading-spinner" id="loading-spinner" style="display: none;">
-    <div class="spinner"></div>
-  </div>
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loading-spinner" style="display: none">
+      <div class="spinner"></div>
+    </div>
 
-  <!-- Toast Container -->
-  <div class="toast-container"></div>
+    <!-- Toast Container -->
+    <div class="toast-container"></div>
 
-  <!-- Load Firebase Config and Utils -->
-  <script src="../js/firebase-config.js"></script>
-  <script src="../js/utils.js"></script>
-  
-  <!-- Budgeting Script -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // DOM Elements
-      const budgetForm = document.getElementById('budget-form');
-      const categorySelect = document.getElementById('budget-category');
-      const budgetInput = document.getElementById('budget-amount');
-      const budgetOverviewCard = document.getElementById('budget-overview-card');
-      const budgetProgress = document.getElementById('budget-progress');
-      const emptyBudgets = document.getElementById('empty-budgets');
-      
-      // Initialize sidebar and profile dropdown
-      initializeSidebar();
-      initializeProfileDropdown();
-      
-      // Current user data
-      let currentUser = null;
-      let budgets = {};
-      
-      // Check if user is logged in
-      firebase.auth().onAuthStateChanged(async function(user) {
-        if (user) {
-          // User is logged in
-          currentUser = user;
-          
-          // Populate category select
-          populateCategorySelect();
-          
-          // Load budgets
-          await loadBudgets();
-          
-          // Load budget progress
-          await loadBudgetProgress();
-        } else {
-          // User is not logged in, redirect to login page
-          window.location.href = 'login.html';
-        }
-      });
-      
-      // Populate category select
-      function populateCategorySelect() {
-        if (!categorySelect) return;
-        
-        // Get categories
-        const categories = getCategories();
-        
-        // Clear existing options
-        categorySelect.innerHTML = '';
-        
-        // Add categories
-        categories.forEach(category => {
-          const option = document.createElement('option');
-          option.value = category;
-          option.textContent = category;
-          categorySelect.appendChild(option);
-        });
-        
-        // Add event listener to category select
-        categorySelect.addEventListener('change', function() {
-          const selectedCategory = categorySelect.value;
-          if (budgetInput && budgets[selectedCategory]) {
-            budgetInput.value = budgets[selectedCategory];
-          } else {
-            budgetInput.value = '';
-          }
-        });
-      }
-      
-      // Load budgets
-      async function loadBudgets() {
-        if (!currentUser) return;
-        
-        showLoading(true);
-        
-        try {
-          // Get meta document
-          const metaDoc = await firebase.firestore().collection('users').doc(currentUser.uid).collection('meta').doc('profile').get();
-          
-          if (metaDoc.exists) {
-            const metaData = metaDoc.data();
-            budgets = metaData.budgets || {};
-            
-            // Update budget input if category is selected
-            if (categorySelect && categorySelect.value) {
-              const selectedCategory = categorySelect.value;
-              if (budgetInput && budgets[selectedCategory]) {
-                budgetInput.value = budgets[selectedCategory];
-              } else {
-                budgetInput.value = '';
-              }
-            }
-          } else {
-            // Create meta document if it doesn't exist
-            await firebase.firestore().collection('users').doc(currentUser.uid).collection('meta').doc('profile').set({
-              income: {
-                amount: 0,
-                type: 'monthly',
-                currency: 'INR'
-              },
-              budgets: {}
-            });
-            
-            budgets = {};
-          }
-          
-          showLoading(false);
-        } catch (error) {
-          console.error('Error loading budgets:', error);
-          showToast('Error loading budgets. Please try again.', 'error');
-          showLoading(false);
-        }
-      }
-      
-      // Set budget form submission
-      if (budgetForm) {
-        budgetForm.addEventListener('submit', async function(e) {
-          e.preventDefault();
-          
-          if (!currentUser) return;
-          
-          showLoading(true);
-          
-          try {
-            // Get form values
-            const category = categorySelect.value;
-            const budget = parseFloat(budgetInput.value);
-            
-            // Validate form
-            if (!category) {
-              showToast('Please select a category', 'error');
-              showLoading(false);
-              return;
-            }
-            
-            if (budget <= 0) {
-              showToast('Please enter a valid budget amount', 'error');
-              showLoading(false);
-              return;
-            }
-            
-            // Update budgets
-            budgets[category] = budget;
-            
-            // Update meta document
-            await firebase.firestore().collection('users').doc(currentUser.uid).collection('meta').doc('profile').update({
-              [`budgets.${category}`]: budget
-            });
-            
-            // Show success message
-            showToast('Budget set successfully', 'success');
-            
-            // Reload budget progress
+    <!-- Load Firebase Config and Utils -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/utils.js"></script>
+
+    <!-- Budgeting Script -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // DOM Elements
+        const budgetForm = document.getElementById("budget-form");
+        const categorySelect = document.getElementById("budget-category");
+        const budgetInput = document.getElementById("budget-amount");
+        const budgetOverviewCard = document.getElementById(
+          "budget-overview-card"
+        );
+        const budgetProgress = document.getElementById("budget-progress");
+        const emptyBudgets = document.getElementById("empty-budgets");
+
+        // Initialize sidebar and profile dropdown
+        initializeSidebar();
+        initializeProfileDropdown();
+
+        // Current user data
+        let currentUser = null;
+        let budgets = {};
+
+        // Check if user is logged in
+        firebase.auth().onAuthStateChanged(async function (user) {
+          if (user) {
+            // User is logged in
+            currentUser = user;
+
+            // Populate category select
+            populateCategorySelect();
+
+            // Load budgets
+            await loadBudgets();
+
+            // Load budget progress
             await loadBudgetProgress();
-            
+          } else {
+            // User is not logged in, redirect to login page
+            window.location.href = "login.html";
+          }
+        });
+
+        // Populate category select
+        function populateCategorySelect() {
+          if (!categorySelect) return;
+
+          // Get categories
+          const categories = getCategories();
+
+          // Clear existing options
+          categorySelect.innerHTML = "";
+
+          // Add categories
+          categories.forEach((category) => {
+            const option = document.createElement("option");
+            option.value = category;
+            option.textContent = category;
+            categorySelect.appendChild(option);
+          });
+
+          // Add event listener to category select
+          categorySelect.addEventListener("change", function () {
+            const selectedCategory = categorySelect.value;
+            if (budgetInput && budgets[selectedCategory]) {
+              budgetInput.value = budgets[selectedCategory];
+            } else {
+              budgetInput.value = "";
+            }
+          });
+        }
+
+        // Load budgets
+        async function loadBudgets() {
+          if (!currentUser) return;
+
+          showLoading(true);
+
+          try {
+            // Get meta document
+            const metaDoc = await firebase
+              .firestore()
+              .collection("users")
+              .doc(currentUser.uid)
+              .collection("meta")
+              .doc("profile")
+              .get();
+
+            if (metaDoc.exists) {
+              const metaData = metaDoc.data();
+              budgets = metaData.budgets || {};
+
+              // Update budget input if category is selected
+              if (categorySelect && categorySelect.value) {
+                const selectedCategory = categorySelect.value;
+                if (budgetInput && budgets[selectedCategory]) {
+                  budgetInput.value = budgets[selectedCategory];
+                } else {
+                  budgetInput.value = "";
+                }
+              }
+            } else {
+              // Create meta document if it doesn't exist
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(currentUser.uid)
+                .collection("meta")
+                .doc("profile")
+                .set({
+                  income: {
+                    amount: 0,
+                    type: "monthly",
+                    currency: "INR",
+                  },
+                  budgets: {},
+                });
+
+              budgets = {};
+            }
+
             showLoading(false);
           } catch (error) {
-            console.error('Error setting budget:', error);
-            showToast('Error setting budget. Please try again.', 'error');
+            console.error("Error loading budgets:", error);
+            showToast("Error loading budgets. Please try again.", "error");
             showLoading(false);
           }
-        });
-      }
-      
-      // Load budget progress
-      async function loadBudgetProgress() {
-        if (!currentUser || !budgetProgress) return;
-        
-        showLoading(true);
-        
-        try {
-          // Check if budgets are set
-          if (Object.keys(budgets).length === 0) {
-            if (budgetOverviewCard) budgetOverviewCard.style.display = 'none';
-            if (emptyBudgets) emptyBudgets.style.display = 'flex';
-            showLoading(false);
-            return;
-          }
-          
-          // Show budget overview
-          if (budgetOverviewCard) budgetOverviewCard.style.display = 'block';
-          if (emptyBudgets) emptyBudgets.style.display = 'none';
-          
-          // Get current month expenses
-          const currentDate = new Date();
-          const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-          const startOfMonthStr = startOfMonth.toISOString().split('T')[0];
-          
-          const transactionsRef = firebase.firestore().collection('users').doc(currentUser.uid).collection('transactions');
-          const transactionsQuery = transactionsRef
-            .where('type', '==', 'expense')
-            .where('date', '>=', startOfMonthStr);
-          
-          const transactionsSnapshot = await transactionsQuery.get();
-          
-          const expenses = [];
-          
-          transactionsSnapshot.forEach(doc => {
-            expenses.push({
-              id: doc.id,
-              ...doc.data()
+        }
+
+        // Set budget form submission
+        if (budgetForm) {
+          budgetForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            if (!currentUser) return;
+
+            showLoading(true);
+
+            try {
+              // Get form values
+              const category = categorySelect.value;
+              const budget = parseFloat(budgetInput.value);
+
+              // Validate form
+              if (!category) {
+                showToast("Please select a category", "error");
+                showLoading(false);
+                return;
+              }
+
+              if (budget <= 0) {
+                showToast("Please enter a valid budget amount", "error");
+                showLoading(false);
+                return;
+              }
+
+              // Update budgets
+              budgets[category] = budget;
+
+              // Update meta document
+              await firebase
+                .firestore()
+                .collection("users")
+                .doc(currentUser.uid)
+                .collection("meta")
+                .doc("profile")
+                .update({
+                  [`budgets.${category}`]: budget,
+                });
+
+              // Show success message
+              showToast("Budget set successfully", "success");
+
+              // Reload budget progress
+              await loadBudgetProgress();
+
+              showLoading(false);
+            } catch (error) {
+              console.error("Error setting budget:", error);
+              showToast("Error setting budget. Please try again.", "error");
+              showLoading(false);
+            }
+          });
+        }
+
+        // Load budget progress
+        async function loadBudgetProgress() {
+          if (!currentUser || !budgetProgress) return;
+
+          showLoading(true);
+
+          try {
+            // Check if budgets are set
+            if (Object.keys(budgets).length === 0) {
+              if (budgetOverviewCard) budgetOverviewCard.style.display = "none";
+              if (emptyBudgets) emptyBudgets.style.display = "flex";
+              showLoading(false);
+              return;
+            }
+
+            // Show budget overview
+            if (budgetOverviewCard) budgetOverviewCard.style.display = "block";
+            if (emptyBudgets) emptyBudgets.style.display = "none";
+
+            // Get current month expenses
+            const currentDate = new Date();
+            const startOfMonth = new Date(
+              currentDate.getFullYear(),
+              currentDate.getMonth(),
+              1
+            );
+            const startOfMonthStr = startOfMonth.toISOString().split("T")[0];
+
+            const transactionsRef = firebase
+              .firestore()
+              .collection("users")
+              .doc(currentUser.uid)
+              .collection("transactions");
+            const transactionsQuery = transactionsRef
+              .where("type", "==", "expense")
+              .where("date", ">=", startOfMonthStr);
+
+            const transactionsSnapshot = await transactionsQuery.get();
+
+            const expenses = [];
+
+            transactionsSnapshot.forEach((doc) => {
+              expenses.push({
+                id: doc.id,
+                ...doc.data(),
+              });
             });
-          });
-          
-          // Group expenses by category
-          const categoryTotals = {};
-          
-          expenses.forEach(expense => {
-            if (!categoryTotals[expense.category]) {
-              categoryTotals[expense.category] = 0;
-            }
-            categoryTotals[expense.category] += parseFloat(expense.amount);
-          });
-          
-          // Clear budget progress container
-          budgetProgress.innerHTML = '';
-          
-          // Create budget progress bars
-          Object.entries(budgets).forEach(([category, budget]) => {
-            const spent = categoryTotals[category] || 0;
-            const percentage = (spent / budget) * 100;
-            
-            // Determine progress bar class
-            let progressClass = 'progress-normal';
-            if (percentage >= 90) {
-              progressClass = 'progress-danger';
-            } else if (percentage >= 75) {
-              progressClass = 'progress-warning';
-            }
-            
-            if (percentage > 100) {
-              progressClass = 'progress-over';
-            }
-            
-            const budgetItem = document.createElement('div');
-            budgetItem.className = 'budget-category';
-            
-            budgetItem.innerHTML = `
+
+            // Group expenses by category
+            const categoryTotals = {};
+
+            expenses.forEach((expense) => {
+              if (!categoryTotals[expense.category]) {
+                categoryTotals[expense.category] = 0;
+              }
+              categoryTotals[expense.category] += parseFloat(expense.amount);
+            });
+
+            // Clear budget progress container
+            budgetProgress.innerHTML = "";
+
+            // Create budget progress bars
+            Object.entries(budgets).forEach(([category, budget]) => {
+              const spent = categoryTotals[category] || 0;
+              const percentage = (spent / budget) * 100;
+
+              // Determine progress bar class
+              let progressClass = "progress-normal";
+              if (percentage >= 90) {
+                progressClass = "progress-danger";
+              } else if (percentage >= 75) {
+                progressClass = "progress-warning";
+              }
+
+              if (percentage > 100) {
+                progressClass = "progress-over";
+              }
+
+              const budgetItem = document.createElement("div");
+              budgetItem.className = "budget-category";
+
+              budgetItem.innerHTML = `
               <div class="budget-category-header">
                 <div class="budget-category-name">
                   <i class="${getCategoryIcon(category)}"></i>
                   ${category}
                 </div>
                 <div class="budget-category-values">
-                  <span class="spent">${formatCurrency(spent)}</span> / ${formatCurrency(budget)}
+                  <span class="spent">${formatCurrency(
+                    spent
+                  )}</span> / ${formatCurrency(budget)}
                 </div>
               </div>
               <div class="progress-bar-container">
-                <div class="progress-bar ${progressClass}" style="width: ${Math.min(percentage, 100)}%"></div>
+                <div class="progress-bar ${progressClass}" style="width: ${Math.min(
+                percentage,
+                100
+              )}%"></div>
               </div>
             `;
-            
-            budgetProgress.appendChild(budgetItem);
-            
-            // Show toast notification for budget breaches
-            if (percentage > 100) {
-              showToast(`Budget exceeded for ${category}!`, 'warning');
-            }
-          });
-          
-          showLoading(false);
-        } catch (error) {
-          console.error('Error loading budget progress:', error);
-          showToast('Error loading budget progress. Please try again.', 'error');
-          showLoading(false);
+
+              budgetProgress.appendChild(budgetItem);
+
+              // Show toast notification for budget breaches
+              if (percentage > 100) {
+                showToast(`Budget exceeded for ${category}!`, "warning");
+              }
+            });
+
+            showLoading(false);
+          } catch (error) {
+            console.error("Error loading budget progress:", error);
+            showToast(
+              "Error loading budget progress. Please try again.",
+              "error"
+            );
+            showLoading(false);
+          }
         }
-      }
-    });
-  </script>
-</body>
+
+        const openBudgetModalBtn = document.getElementById(
+          "open-budget-modal-btn"
+        );
+        const budgetModal = document.getElementById("budget-modal");
+        const closeBudgetModal = document.getElementById("close-budget-modal");
+
+        if (openBudgetModalBtn && budgetModal) {
+          openBudgetModalBtn.addEventListener("click", function () {
+            budgetModal.classList.add("active");
+          });
+        }
+        if (closeBudgetModal && budgetModal) {
+          closeBudgetModal.addEventListener("click", function () {
+            budgetModal.classList.remove("active");
+          });
+        }
+        // Close modal when clicking outside modal content
+        window.addEventListener("click", function (event) {
+          if (event.target === budgetModal) {
+            budgetModal.classList.remove("active");
+          }
+        });
+      });
+    </script>
+  </body>
 </html>

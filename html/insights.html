@@ -258,30 +258,19 @@
       // Load insights data
       async function loadInsightsData() {
         if (!currentUser) return;
-        
         showLoading(true);
-        
         try {
           // Get transactions
           const transactionsRef = firebase.firestore().collection('users').doc(currentUser.uid).collection('transactions');
           let query = transactionsRef.orderBy('date', 'desc');
-          
-          // Apply type filter
           if (typeFilter && typeFilter.value) {
             query = query.where('type', '==', typeFilter.value);
           }
-          
           const transactionsSnapshot = await query.get();
-          
           let transactions = [];
-          
           transactionsSnapshot.forEach(doc => {
-            transactions.push({
-              id: doc.id,
-              ...doc.data()
-            });
+            transactions.push({ id: doc.id, ...doc.data() });
           });
-          
           // Apply date filters client-side
           if (dateFromFilter && dateFromFilter.value) {
             const fromDate = new Date(dateFromFilter.value);
@@ -291,7 +280,6 @@
               return transactionDate >= fromDate;
             });
           }
-          
           if (dateToFilter && dateToFilter.value) {
             const toDate = new Date(dateToFilter.value);
             toDate.setHours(23, 59, 59, 999);
@@ -300,21 +288,29 @@
               return transactionDate <= toDate;
             });
           }
-          
+          // Fetch profile income
+          let baseIncome = 0;
+          let incomeType = "monthly";
+          const metaDoc = await firebase.firestore().collection('users').doc(currentUser.uid).collection('meta').doc('profile').get();
+          if (metaDoc.exists) {
+            const metaData = metaDoc.data();
+            if (metaData.income) {
+              baseIncome = parseFloat(metaData.income.amount) || 0;
+              incomeType = metaData.income.type || "monthly";
+            }
+          }
           // Show/hide empty state
-          if (transactions.length === 0) {
+          if (transactions.length === 0 && baseIncome === 0) {
             if (emptyInsights) emptyInsights.style.display = 'flex';
             if (chartsGrid) chartsGrid.style.display = 'none';
           } else {
             if (emptyInsights) emptyInsights.style.display = 'none';
             if (chartsGrid) chartsGrid.style.display = 'grid';
-            
-            // Create charts
+            // Create charts (pass baseIncome and incomeType)
             createPieChart(transactions);
-            createBarChart(transactions);
-            createLineChart(transactions);
+            createBarChart(transactions, baseIncome, incomeType);
+            createLineChart(transactions, baseIncome, incomeType);
           }
-          
           showLoading(false);
         } catch (error) {
           console.error('Error loading insights data:', error);
@@ -326,35 +322,27 @@
       // Create pie chart for expenses by category
       function createPieChart(transactions) {
         if (!pieChartCanvas) return;
-        
         // Destroy existing chart if any
         if (pieChart) {
           pieChart.destroy();
         }
-        
         // Filter expenses only
         const expenses = transactions.filter(transaction => transaction.type === 'expense');
-        
         if (expenses.length === 0) {
           return;
         }
-        
         // Prepare data for chart
         const categoryData = {};
-        
         expenses.forEach(transaction => {
           if (!categoryData[transaction.category]) {
             categoryData[transaction.category] = 0;
           }
           categoryData[transaction.category] += parseFloat(transaction.amount);
         });
-        
         const labels = Object.keys(categoryData);
         const data = Object.values(categoryData);
-        
         // Generate colors for chart
         const colors = generateChartColors(labels.length);
-        
         // Create chart
         pieChart = new Chart(pieChartCanvas, {
           type: 'pie',
@@ -391,50 +379,50 @@
       }
       
       // Create bar chart for income vs expense by month
-      function createBarChart(transactions) {
+      function createBarChart(transactions, baseIncome = 0, incomeType = "monthly") {
         if (!barChartCanvas) return;
-        
-        // Destroy existing chart if any
-        if (barChart) {
-          barChart.destroy();
-        }
-        
-        if (transactions.length === 0) {
-          return;
-        }
-        
+        if (barChart) { barChart.destroy(); }
+        if (transactions.length === 0 && baseIncome === 0) { return; }
         // Group transactions by month
         const monthlyData = {};
-        
         transactions.forEach(transaction => {
           const date = new Date(transaction.date);
           const month = date.toLocaleString('default', { month: 'short', year: 'numeric' });
-          
           if (!monthlyData[month]) {
-            monthlyData[month] = {
-              income: 0,
-              expense: 0
-            };
+            monthlyData[month] = { income: 0, expense: 0 };
           }
-          
           if (transaction.type === 'income') {
             monthlyData[month].income += parseFloat(transaction.amount);
           } else {
             monthlyData[month].expense += parseFloat(transaction.amount);
           }
         });
-        
+        // If baseIncome is set, add to each month (for monthly income)
+        if (baseIncome > 0) {
+          let months = Object.keys(monthlyData);
+          if (months.length === 0) {
+            // If no transactions, show at least current month
+            const now = new Date();
+            const thisMonth = now.toLocaleString('default', { month: 'short', year: 'numeric' });
+            months = [thisMonth];
+            monthlyData[thisMonth] = { income: 0, expense: 0 };
+          }
+          months.forEach(month => {
+            if (incomeType === "monthly") {
+              monthlyData[month].income += baseIncome;
+            } else if (incomeType === "one-time") {
+              // Add one-time income only to the earliest month
+              const sortedMonths = months.slice().sort((a, b) => new Date(a) - new Date(b));
+              if (month === sortedMonths[0]) {
+                monthlyData[month].income += baseIncome;
+              }
+            }
+          });
+        }
         // Sort months chronologically
-        const sortedMonths = Object.keys(monthlyData).sort((a, b) => {
-          const dateA = new Date(a);
-          const dateB = new Date(b);
-          return dateA - dateB;
-        });
-        
+        const sortedMonths = Object.keys(monthlyData).sort((a, b) => new Date(a) - new Date(b));
         const incomeData = sortedMonths.map(month => monthlyData[month].income);
         const expenseData = sortedMonths.map(month => monthlyData[month].expense);
-        
-        // Create chart
         barChart = new Chart(barChartCanvas, {
           type: 'bar',
           data: {
@@ -458,15 +446,11 @@
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-              x: {
-                stacked: false
-              },
+              x: { stacked: false },
               y: {
                 beginAtZero: true,
                 ticks: {
-                  callback: function(value) {
-                    return formatCurrency(value);
-                  }
+                  callback: function(value) { return formatCurrency(value); }
                 }
               }
             },
@@ -489,59 +473,58 @@
       }
       
       // Create line chart for monthly balance trend
-      function createLineChart(transactions) {
+      function createLineChart(transactions, baseIncome = 0, incomeType = "monthly") {
         if (!lineChartCanvas) return;
-        
-        // Destroy existing chart if any
-        if (lineChart) {
-          lineChart.destroy();
-        }
-        
-        if (transactions.length === 0) {
-          return;
-        }
-        
+        if (lineChart) { lineChart.destroy(); }
+        if (transactions.length === 0 && baseIncome === 0) { return; }
         // Group transactions by month
         const monthlyData = {};
-        
         transactions.forEach(transaction => {
           const date = new Date(transaction.date);
           const month = date.toLocaleString('default', { month: 'short', year: 'numeric' });
-          
           if (!monthlyData[month]) {
-            monthlyData[month] = {
-              income: 0,
-              expense: 0
-            };
+            monthlyData[month] = { income: 0, expense: 0 };
           }
-          
           if (transaction.type === 'income') {
             monthlyData[month].income += parseFloat(transaction.amount);
           } else {
             monthlyData[month].expense += parseFloat(transaction.amount);
           }
         });
-        
+        // Add base income to each month (if monthly income)
+        if (baseIncome > 0) {
+          let months = Object.keys(monthlyData);
+          if (months.length === 0) {
+            // If no transactions, show at least current month
+            const now = new Date();
+            const thisMonth = now.toLocaleString('default', { month: 'short', year: 'numeric' });
+            months = [thisMonth];
+            monthlyData[thisMonth] = { income: 0, expense: 0 };
+          }
+          months.forEach(month => {
+            if (incomeType === "monthly") {
+              monthlyData[month].income += baseIncome;
+            } else if (incomeType === "one-time") {
+              // Add one-time income only to the earliest month
+              const sortedMonths = months.slice().sort((a, b) => new Date(a) - new Date(b));
+              if (month === sortedMonths[0]) {
+                monthlyData[month].income += baseIncome;
+              }
+            }
+          });
+        }
         // Sort months chronologically
-        const sortedMonths = Object.keys(monthlyData).sort((a, b) => {
-          const dateA = new Date(a);
-          const dateB = new Date(b);
-          return dateA - dateB;
-        });
-        
+        const sortedMonths = Object.keys(monthlyData).sort((a, b) => new Date(a) - new Date(b));
         // Calculate monthly balance
         const balanceData = sortedMonths.map(month => {
           return monthlyData[month].income - monthlyData[month].expense;
         });
-        
         // Calculate cumulative balance
         let cumulativeBalance = 0;
         const cumulativeData = balanceData.map(balance => {
           cumulativeBalance += balance;
           return cumulativeBalance;
         });
-        
-        // Create chart
         lineChart = new Chart(lineChartCanvas, {
           type: 'line',
           data: {
@@ -573,9 +556,7 @@
             scales: {
               y: {
                 ticks: {
-                  callback: function(value) {
-                    return formatCurrency(value);
-                  }
+                  callback: function(value) { return formatCurrency(value); }
                 }
               }
             },
