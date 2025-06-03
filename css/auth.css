@@ -40,7 +40,6 @@
   gap: var(--spacing-md);
 }
 
-/* Authentication Container */
 .auth-container {
   min-height: 100vh;
   flex: 1 0 auto;
@@ -231,7 +230,6 @@
   text-decoration: underline;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
   .auth-form {
     padding: var(--spacing-lg);
