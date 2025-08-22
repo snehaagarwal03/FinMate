@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FinMate|Transactions</title>
+    <title>FinMate | Transactions</title>
 
     <link rel="icon" type="image/svg+xml" href="../assets/logo.svg" />
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -614,10 +614,7 @@
               loadTransactions();
             } catch (error) {
               console.error("Error adding transaction:", error);
-              showToast(
-                "Error adding transaction. Please try again.",
-                "error"
-              );
+              showToast("Error adding transaction. Please try again.", "error");
               showLoading(false);
             }
           });
@@ -637,16 +634,18 @@
               const amount = document.getElementById(
                 "edit-transaction-amount"
               ).value;
-              const date = document.getElementById("edit-transaction-date")
-                .value;
+              const date = document.getElementById(
+                "edit-transaction-date"
+              ).value;
               const category = document.getElementById(
                 "edit-transaction-category"
               ).value;
               const description = document.getElementById(
                 "edit-transaction-description"
               ).value;
-              const type = document.getElementById("edit-transaction-type")
-                .value;
+              const type = document.getElementById(
+                "edit-transaction-type"
+              ).value;
 
               // Validate form
               if (!amount || !date || !category || !description || !type) {
@@ -840,15 +839,11 @@
               });
             });
 
-            // Log all transactions for debugging
-            console.log("Fetched transactions:", allTransactions);
-
             // Defensive: Only filter if date is valid and present
             if (dateFromFilter && dateFromFilter.value) {
               const fromDate = new Date(dateFromFilter.value);
-              allTransactions = allTransactions.filter((transaction, idx) => {
+              allTransactions = allTransactions.filter((transaction) => {
                 try {
-                  console.log(`Checking transaction #${idx}:`, transaction);
                   if (!transaction.date) return false;
                   if (!/^\d{4}-\d{2}-\d{2}$/.test(transaction.date))
                     return false;
@@ -857,7 +852,7 @@
                   return txDate >= fromDate;
                 } catch (err) {
                   console.error(
-                    'Date filter error for transaction:',
+                    "Date filter error for transaction:",
                     transaction,
                     err
                   );
@@ -868,9 +863,8 @@
 
             if (dateToFilter && dateToFilter.value) {
               const toDate = new Date(dateToFilter.value);
-              allTransactions = allTransactions.filter((transaction, idx) => {
+              allTransactions = allTransactions.filter((transaction) => {
                 try {
-                  console.log(`Checking transaction #${idx}:`, transaction);
                   if (!transaction.date) return false;
                   if (!/^\d{4}-\d{2}-\d{2}$/.test(transaction.date))
                     return false;
@@ -879,7 +873,7 @@
                   return txDate <= toDate;
                 } catch (err) {
                   console.error(
-                    'Date filter error for transaction:',
+                    "Date filter error for transaction:",
                     transaction,
                     err
                   );
