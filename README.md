@@ -93,7 +93,7 @@ FinMate/
 
 ## 🚀 Deployment
 
-#### 1. Vercel Deployment Setup
+### 1. Vercel Deployment Setup
 
 1. **Sign up or log in to Vercel** at [vercel.com](https://vercel.com/).
 2. **Import your repository:**
