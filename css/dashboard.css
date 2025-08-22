@@ -1,13 +1,9 @@
-/* Dashboard CSS */
-
-/* Container */
 .dashboard-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Dashboard Content */
 .dashboard-content {
   display: flex;
   flex: 1;

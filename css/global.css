@@ -1,6 +1,4 @@
-/* Global CSS Variables */
 :root {
-  /* Colors */
   --primary-color: #00bcd4;
   --secondary-color: #b388ff;
   --text-color: #333333;
@@ -13,7 +11,6 @@
   --danger-color: #F44336;
   --info-color: #2196F3;
   
-  /* Font sizes */
   --font-xs: 0.75rem;
   --font-sm: 0.875rem;
   --font-md: 1rem;
@@ -22,7 +19,6 @@
   --font-2xl: 2rem;
   --font-3xl: 2.5rem;
   
-  /* Spacing */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -30,19 +26,16 @@
   --spacing-xl: 2rem;
   --spacing-2xl: 3rem;
   
-  /* Border radius */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 1rem;
   --radius-xl: 1.5rem;
   --radius-full: 9999px;
   
-  /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
   
-  /* Transitions */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
@@ -272,7 +265,7 @@ input:focus, select:focus, textarea:focus {
   color: transparent;
 }
 
-/* Toast/Notification */
+/* Toast Notification */
 .toast-container {
   position: fixed;
   top: 20px;

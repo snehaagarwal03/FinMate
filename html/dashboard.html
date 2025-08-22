@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard - FinMate</title>
+    <title>FinMate|Dashboard</title>
+
+    <link rel="icon" type="image/svg+xml" href="../assets/logo.svg" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,17 +21,14 @@
     <link rel="stylesheet" href="../css/components.css" />
     <link rel="stylesheet" href="../css/dashboard.css" />
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="dashboard-container">
-      <!-- Header -->
       <header class="header">
         <div class="header-container">
           <div class="header-left">
@@ -36,7 +36,7 @@
               <i class="fas fa-bars"></i>
             </button>
             <div class="logo">
-              <img src="../assets/images/logo.svg" alt="FinMate Logo" />
+              <img src="../assets/logo.svg" alt="FinMate Logo" />
               <span class="logo-text">FinMate</span>
             </div>
           </div>
@@ -86,7 +86,6 @@
       </header>
 
       <div class="dashboard-content">
-        <!-- Side Navigation -->
         <nav class="sidenav" id="sidenav">
           <ul class="sidenav-menu">
             <li class="sidenav-item">
@@ -122,14 +121,12 @@
           </ul>
         </nav>
 
-        <!-- Main Content -->
         <main class="main-content">
           <div class="dashboard-welcome">
             <h2 id="dashboard-greeting">Hey, User!</h2>
             <p>Here's an overview of your overall finances</p>
           </div>
 
-          <!-- Summary Cards -->
           <div class="summary-cards">
             <div class="summary-card">
               <div class="summary-card-header">
@@ -174,7 +171,6 @@
             </div>
           </div>
 
-          <!-- Chart Section -->
           <div class="chart-container">
             <div class="chart-header">
               <h3>Quick Glance</h3>
@@ -192,7 +188,6 @@
             </div>
           </div>
 
-          <!-- Recent Transactions -->
           <div class="recent-transactions">
             <h3>Recent Transactions</h3>
             <div
@@ -217,22 +212,17 @@
       </div>
     </div>
 
-    <!-- Loading Spinner -->
     <div class="loading-spinner" id="loading-spinner" style="display: none">
       <div class="spinner"></div>
     </div>
 
-    <!-- Toast Container -->
     <div class="toast-container"></div>
 
-    <!-- Load Firebase Config -->
     <script src="../js/firebase-config.js"></script>
     <script src="../js/utils.js"></script>
 
-    <!-- Dashboard Script -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // DOM Elements
         const welcomeMessage = document.getElementById("welcome-message");
         const totalIncome = document.getElementById("total-income");
         const totalExpenses = document.getElementById("total-expenses");
@@ -253,19 +243,13 @@
 
         // Chart Instance
         let dashboardChart = null;
-
-        // Current User
         let currentUser = null;
-
         // Check if user is logged in
         firebase.auth().onAuthStateChanged(async function (user) {
           if (user) {
-            // User is logged in
             currentUser = user;
-
             // Update profile information
             if (profileEmail) profileEmail.textContent = user.email;
-
             // Get user name from Firestore
             try {
               const userDoc = await firebase
@@ -287,7 +271,6 @@
             } catch (error) {
               console.error("Error getting user data:", error);
             }
-
             // Load dashboard data
             loadDashboardData(user.uid);
           } else {
@@ -362,7 +345,6 @@
           });
         }
 
-        // Load dashboard data
         async function loadDashboardData(userId) {
           showLoading(true);
 
@@ -422,7 +404,7 @@
                 monthlyIncomeTotals[month] += parseFloat(transaction.amount);
               } else if (transaction.type === "expense") {
                 expenseTotal += parseFloat(transaction.amount);
-                // Ensure expense-only months are included for income
+                // Ensure expense-only months are excluded for income
                 if (!monthlyIncomeTotals[month]) monthlyIncomeTotals[month] = 0;
               }
             });
@@ -467,12 +449,10 @@
             if (currentBalance)
               currentBalance.textContent = formatCurrency(balance);
 
-            // Display recent transactions
+            // Display recent transactions-function
             displayRecentTransactions(transactions);
 
-            // Initialize chart
             initializeChart("pie", transactions);
-
             showLoading(false);
           } catch (error) {
             console.error("Error loading dashboard data:", error);
@@ -490,7 +470,6 @@
 
           // Clear existing transactions
           transactionList.innerHTML = "";
-
           // Show/hide empty state
           if (transactions.length === 0) {
             transactionList.style.display = "none";
@@ -537,29 +516,23 @@
           });
         }
 
-        // Initialize chart
         function initializeChart(type, transactions) {
           if (!chartCanvas) return;
-
           // Destroy existing chart if any
           if (dashboardChart) {
             dashboardChart.destroy();
           }
-
           // If no transactions, don't create chart
           if (transactions.length === 0) return;
-
           if (type === "pie") {
             // Create pie chart for expense categories
             const expensesByCategory = {};
-
             // Filter expense transactions
             const expenses = transactions.filter(
               (transaction) => transaction.type === "expense"
             );
-
+            // No expense data yet
             if (expenses.length === 0) {
-              // No expense data yet
               return;
             }
 
@@ -579,7 +552,6 @@
             const amounts = Object.values(expensesByCategory);
             const colors = generateColors(categories.length);
 
-            // Create chart
             dashboardChart = new Chart(chartCanvas, {
               type: "pie",
               data: {
@@ -653,7 +625,6 @@
               (month) => monthlyData[month].expense
             );
 
-            // Create chart
             dashboardChart = new Chart(chartCanvas, {
               type: "bar",
               data: {
@@ -831,14 +802,12 @@
           return colors;
         }
 
-        // Show/hide loading spinner
         function showLoading(show) {
           if (loadingSpinner) {
             loadingSpinner.style.display = show ? "flex" : "none";
           }
         }
 
-        // Toast notification function
         function showToast(message, type = "default") {
           const toast = document.createElement("div");
           toast.className = `toast ${type}`;

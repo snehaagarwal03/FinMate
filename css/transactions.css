@@ -1,19 +1,14 @@
-/* Transactions CSS */
-
-/* Container */
 .transactions-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Transactions Content */
 .transactions-content {
   display: flex;
   flex: 1;
 }
 
-/* Transactions Main */
 .transactions-main {
   flex: 1;
   padding: var(--spacing-lg);
@@ -22,7 +17,6 @@
   transition: margin-left var(--transition-normal);
 }
 
-/* Transactions Header */
 .transactions-header {
   display: flex;
   justify-content: space-between;

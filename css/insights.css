@@ -1,19 +1,14 @@
-/* Insights Page CSS */
-
-/* Container */
 .insights-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Insights Content */
 .insights-content {
   display: flex;
   flex: 1;
 }
 
-/* Insights Main */
 .insights-main {
   flex: 1;
   padding: var(--spacing-lg);
@@ -22,7 +17,6 @@
   transition: margin-left var(--transition-normal);
 }
 
-/* Insights Header */
 .insights-header {
   margin-bottom: var(--spacing-xl);
 }
@@ -33,7 +27,6 @@
   color: var(--text-color);
 }
 
-/* Filters Section */
 .insights-filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));

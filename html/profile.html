@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile - FinMate</title>
+    <title>FinMate|Profile</title>
+
+    <link rel="icon" type="image/svg+xml" href="../assets/logo.svg" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,14 +21,12 @@
     <link rel="stylesheet" href="../css/components.css" />
     <link rel="stylesheet" href="../css/profile.css" />
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   </head>
   <body>
     <div class="profile-container">
-      <!-- Header -->
       <header class="header">
         <div class="header-container">
           <div class="header-left">
@@ -33,7 +34,7 @@
               <i class="fas fa-bars"></i>
             </button>
             <div class="logo">
-              <img src="../assets/images/logo.svg" alt="FinMate Logo" />
+              <img src="../assets/logo.svg" alt="FinMate Logo" />
               <span class="logo-text">FinMate</span>
             </div>
           </div>
@@ -83,7 +84,6 @@
       </header>
 
       <div class="profile-content">
-        <!-- Side Navigation -->
         <nav class="sidenav" id="sidenav">
           <ul class="sidenav-menu">
             <li class="sidenav-item">
@@ -119,14 +119,12 @@
           </ul>
         </nav>
 
-        <!-- Main Content -->
         <main class="profile-main">
           <div class="profile-header">
             <h2>Your Profile</h2>
           </div>
 
           <div class="profile-grid">
-            <!-- Profile Information Card -->
             <div class="profile-card">
               <div class="profile-card-header">
                 <h3 class="profile-card-title">Personal Information</h3>
@@ -175,7 +173,6 @@
               </form>
             </div>
 
-            <!-- Analytics Section -->
             <div class="profile-analytics">
               <h3 class="analytics-title">Financial Analytics</h3>
               <div class="analytics-grid">
@@ -194,18 +191,17 @@
             <div class="top-categories">
               <h3 class="top-categories-title">Top Spending Categories</h3>
               <ul class="category-list" id="top-categories-list">
-                <!-- Categories will be populated via JavaScript -->
+                <!-- Categories will be populated here-->
                 <li class="empty-analytics">
                   <p>No expense data available yet</p>
                 </li>
               </ul>
             </div>
 
-            <!-- Budget Alerts -->
             <div class="budget-alerts">
               <h3 class="budget-alerts-title">Budget Breach Alerts</h3>
               <ul class="alerts-list" id="budget-alerts-list">
-                <!-- Alerts will be populated via JavaScript -->
+                <!-- Alerts will be populated here -->
                 <li class="empty-analytics">
                   <p>No budget breaches this month</p>
                 </li>
@@ -216,22 +212,17 @@
       </div>
     </div>
 
-    <!-- Loading Spinner -->
     <div class="loading-spinner" id="loading-spinner" style="display: none">
       <div class="spinner"></div>
     </div>
 
-    <!-- Toast Container -->
     <div class="toast-container"></div>
 
-    <!-- Load Firebase Config and Utils -->
     <script src="../js/firebase-config.js"></script>
     <script src="../js/utils.js"></script>
 
-    <!-- Profile Script -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // DOM Elements
         const profileForm = document.getElementById("profile-form");
         const nameInput = document.getElementById("profile-name-input");
         const incomeInput = document.getElementById("profile-income");
@@ -245,7 +236,6 @@
         );
         const budgetAlertsList = document.getElementById("budget-alerts-list");
 
-        // Initialize sidebar and profile dropdown
         initializeSidebar();
         initializeProfileDropdown();
 
@@ -258,10 +248,8 @@
             // User is logged in
             currentUser = user;
 
-            // Load profile data
             await loadProfileData();
 
-            // Load analytics data
             await loadAnalyticsData();
           } else {
             // User is not logged in, redirect to login page
@@ -269,7 +257,6 @@
           }
         });
 
-        // Load profile data
         async function loadProfileData() {
           if (!currentUser) return;
 
@@ -334,7 +321,6 @@
           }
         }
 
-        // Load analytics data
         async function loadAnalyticsData() {
           if (!currentUser) return;
 
@@ -360,13 +346,8 @@
               });
             });
 
-            // Load top spending categories
             loadTopSpendingCategories(transactions);
-
-            // Load month-on-month change
             loadMonthOnMonthChange(transactions);
-
-            // Load savings trend
             loadSavingsTrend(transactions);
 
             // Load budget breach alerts
@@ -436,7 +417,6 @@
                   { merge: true }
                 );
 
-              // Show success message
               showToast("Profile updated successfully", "success");
 
               // Update profile dropdown
@@ -451,7 +431,6 @@
           });
         }
 
-        // Load top spending categories
         function loadTopSpendingCategories(transactions) {
           if (!topCategoriesList) return;
 
@@ -507,7 +486,6 @@
           });
         }
 
-        // Load month-on-month change
         function loadMonthOnMonthChange(transactions) {
           if (!monthChangeValue) return;
 
@@ -581,7 +559,6 @@
           }
         }
 
-        // Load savings trend
         function loadSavingsTrend(transactions) {
           if (!savingsTrendValue) return;
 
@@ -679,7 +656,6 @@
           }
         }
 
-        // Load budget alerts
         async function loadBudgetAlerts(transactions) {
           if (!budgetAlertsList) return;
 

@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Transactions - FinMate</title>
+    <title>FinMate|Transactions</title>
+
+    <link rel="icon" type="image/svg+xml" href="../assets/logo.svg" />
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,14 +21,12 @@
     <link rel="stylesheet" href="../css/components.css" />
     <link rel="stylesheet" href="../css/transactions.css" />
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   </head>
   <body>
     <div class="transactions-container">
-      <!-- Header -->
       <header class="header">
         <div class="header-container">
           <div class="header-left">
@@ -33,7 +34,7 @@
               <i class="fas fa-bars"></i>
             </button>
             <div class="logo">
-              <img src="../assets/images/logo.svg" alt="FinMate Logo" />
+              <img src="../assets/logo.svg" alt="FinMate Logo" />
               <span class="logo-text">FinMate</span>
             </div>
           </div>
@@ -83,7 +84,6 @@
       </header>
 
       <div class="transactions-content">
-        <!-- Side Navigation -->
         <nav class="sidenav" id="sidenav">
           <ul class="sidenav-menu">
             <li class="sidenav-item">
@@ -119,7 +119,6 @@
           </ul>
         </nav>
 
-        <!-- Main Content -->
         <main class="transactions-main">
           <div class="transactions-header">
             <h2>Transactions</h2>
@@ -128,13 +127,12 @@
             </button>
           </div>
 
-          <!-- Filters Section -->
           <div class="transactions-filters">
             <div class="filter-group">
               <label for="category-filter">Category</label>
               <select id="category-filter">
                 <option value="">All Categories</option>
-                <!-- Categories will be populated via JavaScript -->
+                <!-- Categories will be populated here -->
               </select>
             </div>
             <div class="filter-group">
@@ -177,11 +175,10 @@
                 </tr>
               </thead>
               <tbody id="transactions-table-body">
-                <!-- Transactions will be populated via JavaScript -->
+                <!-- Transactions will be populated here-->
               </tbody>
             </table>
 
-            <!-- Empty State -->
             <div
               class="empty-transactions"
               id="empty-transactions"
@@ -217,7 +214,7 @@
             <div class="form-group">
               <label for="transaction-category">Category</label>
               <select id="transaction-category" required>
-                <!-- Categories will be populated via JavaScript -->
+                <!-- Categories will be populated here -->
               </select>
             </div>
             <div class="form-group">
@@ -265,7 +262,7 @@
             <div class="form-group">
               <label for="edit-transaction-category">Category</label>
               <select id="edit-transaction-category" required>
-                <!-- Categories will be populated via JavaScript -->
+                <!-- Categories will be populated here -->
               </select>
             </div>
             <div class="form-group">
@@ -310,21 +307,16 @@
       </div>
     </div>
 
-    <!-- Loading Spinner -->
     <div class="loading-spinner" id="loading-spinner" style="display: none">
       <div class="spinner"></div>
     </div>
 
-    <!-- Toast Container -->
     <div class="toast-container"></div>
 
-    <!-- Load Firebase Config -->
     <script src="../js/firebase-config.js"></script>
 
-    <!-- Transactions Script -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // DOM Elements
         const transactionsTable = document.getElementById("transactions-table");
         const transactionsTableBody = document.getElementById(
           "transactions-table-body"
@@ -410,7 +402,6 @@
             // Populate category options
             populateCategoryOptions();
 
-            // Load transactions
             loadTransactions();
           } else {
             // User is not logged in, redirect to login page
@@ -611,13 +602,10 @@
                 .collection("transactions")
                 .add(transaction);
 
-              // Show success message
               showToast("Transaction added successfully", "success");
 
-              // Reset form
               transactionForm.reset();
 
-              // Close modal
               if (transactionModal) {
                 transactionModal.classList.remove("active");
               }
@@ -686,13 +674,10 @@
                 .doc(currentTransactionId)
                 .update(transaction);
 
-              // Show success message
               showToast("Transaction updated successfully", "success");
 
-              // Reset form
               editTransactionForm.reset();
 
-              // Close modal
               if (editTransactionModal) {
                 editTransactionModal.classList.remove("active");
               }
@@ -736,10 +721,8 @@
                 .doc(currentTransactionId)
                 .delete();
 
-              // Show success message
               showToast("Transaction deleted successfully", "success");
 
-              // Close modal
               confirmationModal.classList.remove("active");
 
               // Reload transactions
@@ -905,7 +888,6 @@
               });
             }
 
-            // Display transactions
             displayTransactions();
 
             showLoading(false);
@@ -919,7 +901,6 @@
           }
         }
 
-        // Display transactions
         function displayTransactions() {
           if (
             !transactionsTableBody ||
@@ -984,7 +965,6 @@
             transactionsTableBody.appendChild(row);
           });
 
-          // Add event listeners to edit buttons
           const editButtons = document.querySelectorAll(".edit-btn");
           editButtons.forEach((button) => {
             button.addEventListener("click", function () {
@@ -993,7 +973,6 @@
             });
           });
 
-          // Add event listeners to delete buttons
           const deleteButtons = document.querySelectorAll(".delete-btn");
           deleteButtons.forEach((button) => {
             button.addEventListener("click", function () {
@@ -1153,7 +1132,6 @@
           if (toastContainer) {
             toastContainer.appendChild(toast);
 
-            // Auto remove after 3 seconds
             setTimeout(() => {
               toast.remove();
             }, 3000);

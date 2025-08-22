@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up for FinMate</title>
+    <title>FinMate|Sign Up</title>
+
+    <link rel="icon" type="image/svg+xml" href="../assets/logo.svg" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -18,18 +21,16 @@
     <link rel="stylesheet" href="../css/global.css" />
     <link rel="stylesheet" href="../css/components.css" />
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   </head>
   <body>
-    <!-- Header -->
     <header class="header">
       <div class="header-container">
         <div class="logo">
           <a href="../index.html">
-            <img src="../assets/images/logo.svg" alt="FinMate Logo" />
+            <img src="../assets/logo.svg" alt="FinMate Logo" />
           </a>
           <a href="../index.html" class="logo-text">FinMate</a>
         </div>
@@ -126,17 +127,13 @@
       </div>
     </footer>
 
-    <!-- Toast Container -->
     <div class="toast-container"></div>
 
-    <!-- Load Firebase Config -->
     <script src="../js/firebase-config.js"></script>
     <script src="../js/utils.js"></script>
 
-    <!-- Auth Script -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        // DOM Elements
         const signupForm = document.getElementById("signup-form");
         const signupError = document.getElementById("signup-error");
         const googleSignupBtn = document.getElementById("google-signup");
@@ -169,8 +166,6 @@
               }
               return;
             }
-
-            // Show loading (you can add a loading spinner here)
 
             // Create user with email and password
             firebase
@@ -222,7 +217,6 @@
                   );
               })
               .then(() => {
-                // Show success message
                 showToast("Account created successfully!", "success");
                 // Redirect to dashboard after Firestore write is complete
                 setTimeout(() => {
@@ -230,13 +224,11 @@
                 }, 1000);
               })
               .catch((error) => {
-                // Handle errors
                 console.error("Signup error:", error);
                 if (signupError) {
                   signupError.textContent = getAuthErrorMessage(error.code);
                   signupError.classList.add("active");
                 }
-                // Hide loading
               });
           });
         }
@@ -303,7 +295,6 @@
           if (toastContainer) {
             toastContainer.appendChild(toast);
 
-            // Auto remove after 3 seconds
             setTimeout(() => {
               toast.remove();
             }, 3000);

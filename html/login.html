@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login to FinMate</title>
+    <title>FinMate|Login</title>
+
+    <link rel="icon" type="image/svg+xml" href="../assets/logo.svg" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -24,12 +27,11 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   </head>
   <body>
-    <!-- Header -->
     <header class="header">
       <div class="header-container">
         <div class="logo">
           <a href="../index.html">
-            <img src="../assets/images/logo.svg" alt="FinMate Logo" />
+            <img src="../assets/logo.svg" alt="FinMate Logo" />
           </a>
           <a href="../index.html" class="logo-text">FinMate</a>
         </div>
@@ -134,20 +136,16 @@
       </div>
     </footer>
 
-    <!-- Toast Container -->
     <div class="toast-container"></div>
 
-    <!-- Load Firebase Config -->
     <script src="../js/firebase-config.js"></script>
     <script src="../js/utils.js"></script>
 
-    <!-- Auth Script -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         // DOM Elements
         const loginForm = document.getElementById("login-form");
         const loginError = document.getElementById("login-error");
-        const googleLoginBtn = document.getElementById("google-login");
         const forgotPasswordLink = document.getElementById(
           "forgot-password-link"
         );
@@ -174,7 +172,6 @@
             const email = document.getElementById("login-email").value;
             const password = document.getElementById("login-password").value;
 
-            // Show loading
             showLoading(true);
 
             // Sign in with email and password
@@ -182,81 +179,14 @@
               .auth()
               .signInWithEmailAndPassword(email, password)
               .then((userCredential) => {
-                // Redirect to dashboard
                 window.location.href = "dashboard.html";
               })
               .catch((error) => {
-                // Handle errors
                 if (loginError) {
                   loginError.textContent = getAuthErrorMessage(error.code);
                   loginError.classList.add("active");
                 }
-                // Hide loading
-                showLoading(false);
-              });
-          });
-        }
 
-        // Google login
-        if (googleLoginBtn) {
-          googleLoginBtn.addEventListener("click", function () {
-            const provider = new firebase.auth.GoogleAuthProvider();
-
-            // Show loading
-            showLoading(true);
-
-            firebase
-              .auth()
-              .signInWithPopup(provider)
-              .then((result) => {
-                // Check if it's a new user
-                const isNewUser = result.additionalUserInfo.isNewUser;
-
-                if (isNewUser) {
-                  // Create user document in Firestore
-                  return firebase
-                    .firestore()
-                    .collection("users")
-                    .doc(result.user.uid)
-                    .set({
-                      name: result.user.displayName || "",
-                      email: result.user.email,
-                      createdAt:
-                        firebase.firestore.FieldValue.serverTimestamp(),
-                    })
-                    .then(() => {
-                      // Create meta document for the user
-                      return firebase
-                        .firestore()
-                        .collection("users")
-                        .doc(result.user.uid)
-                        .collection("meta")
-                        .doc("profile")
-                        .set({
-                          income: {
-                            amount: 0,
-                            type: "monthly",
-                            currency: "INR",
-                          },
-                          budgets: {},
-                        });
-                    })
-                    .then(() => {
-                      // Redirect to dashboard
-                      window.location.href = "dashboard.html";
-                    });
-                } else {
-                  // Existing user, redirect to dashboard
-                  window.location.href = "dashboard.html";
-                }
-              })
-              .catch((error) => {
-                // Handle errors
-                if (loginError) {
-                  loginError.textContent = getAuthErrorMessage(error.code);
-                  loginError.classList.add("active");
-                }
-                // Hide loading
                 showLoading(false);
               });
           });
@@ -280,43 +210,37 @@
 
             const email = document.getElementById("reset-email").value;
 
-            // Show loading
             showLoading(true);
 
             firebase
               .auth()
               .sendPasswordResetEmail(email)
               .then(() => {
-                // Show success message
                 showToast(
                   "Password reset email sent. Check your inbox.",
                   "success"
                 );
 
-                // Close modal
+                // Close the modal
                 if (resetPasswordModal) {
                   resetPasswordModal.classList.remove("active");
                 }
-
                 // Clear form
                 resetForm.reset();
 
-                // Hide loading
                 showLoading(false);
               })
               .catch((error) => {
-                // Handle errors
                 if (resetError) {
                   resetError.textContent = getAuthErrorMessage(error.code);
                   resetError.classList.add("active");
                 }
-                // Hide loading
+
                 showLoading(false);
               });
           });
         }
 
-        // Close modal
         if (modalClose) {
           modalClose.addEventListener("click", function () {
             if (resetPasswordModal) {

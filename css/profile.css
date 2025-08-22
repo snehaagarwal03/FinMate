@@ -1,19 +1,14 @@
-/* Profile Page CSS */
-
-/* Container */
 .profile-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Profile Content */
 .profile-content {
   display: flex;
   flex: 1;
 }
 
-/* Profile Main */
 .profile-main {
   flex: 1;
   padding: var(--spacing-lg);
@@ -22,7 +17,6 @@
   transition: margin-left var(--transition-normal);
 }
 
-/* Profile Header */
 .profile-header {
   margin-bottom: var(--spacing-xl);
 }
@@ -33,14 +27,12 @@
   color: var(--text-color);
 }
 
-/* Profile Grid */
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--spacing-xl);
 }
 
-/* Profile Card */
 .profile-card {
   background-color: var(--bg-color);
   border-radius: var(--radius-lg);

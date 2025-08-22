@@ -1,19 +1,14 @@
-/* Budgeting Page CSS */
-
-/* Container */
 .budgeting-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-/* Budgeting Content */
 .budgeting-content {
   display: flex;
   flex: 1;
 }
 
-/* Budgeting Main */
 .budgeting-main {
   flex: 1;
   padding: var(--spacing-lg);
@@ -22,7 +17,6 @@
   transition: margin-left var(--transition-normal);
 }
 
-/* Budgeting Header */
 .budgeting-header {
   margin-bottom: var(--spacing-xl);
 }
@@ -40,7 +34,6 @@
   gap: var(--spacing-xl);
 }
 
-/* Budget Set Card */
 .budget-set-card {
   background-color: var(--bg-color);
   border-radius: var(--radius-lg);
